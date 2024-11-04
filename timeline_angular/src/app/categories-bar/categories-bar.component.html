@@ -1,0 +1,41 @@
+<!-- categories-bar.component.html -->
+<div class="row mb-4 no-print" id="categories-bar">
+    <div class="col-md-12">
+        <div class="filter-bar bar-properties d-flex justify-content-between align-items-center p-3 rounded shadow-sm">
+            <div class="d-flex">
+                <button id="toggle-cards-btn" class="btn btn-sm btn-outline-primary mx-1" (click)="toggleCards()">Rozwiń
+                    wszystkie</button>
+            </div>
+            <div class="d-flex justify-content-center align-items-center flex-grow-1 mx-3">
+                @for (category of categories; track category.name) {
+                <div class="category-item mx-2 text-center">
+                    <button class="btn category-btn" type="button" [attr.data-category-id]="category.id"
+                        [ngStyle]="{'background-color': category.color, 'color': '#fff'}">
+                        {{ category.name }}
+                    </button>
+                    @if (isLoggedIn) {
+                    <div class="mt-2 d-flex justify-content-center align-items-center">
+                        <button class="btn btn-sm btn-outline-primary change-name-btn mx-1" type="button"
+                            (click)="editCategoryName(category.id)" title="Edytuj nazwę">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary change-color-btn mx-1" type="button"
+                            (click)="editCategoryColor(category.id)" title="Edytuj kolor">
+                            <i class="fas fa-paint-brush"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-category-btn mx-1" type="button"
+                            (click)="deleteCategory(category.id)" title="Usuń kategorię">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            <div class="d-flex">
+                <button id="print-view-btn" class="btn btn-sm btn-outline-secondary mx-1"
+                    (click)="printView()">Wydruk</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="/">PGE Narodowy - wydarzenia 2024</a>
+    <button class="navbar-toggler no-print" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse no-print" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        @if(isLoggedIn) {
+        <li class="nav-item">
+          <span class="navbar-text me-5 text-white">
+            Witaj, {{ userName }}
+          </span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" routerLink="/password-change">Zmień hasło</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" (click)="logout()">Wyloguj</a>
+        </li>
+        }
+        @else {
+        <li class="nav-item">
+          <a class="nav-link text-white" routerLink="/login">Zaloguj</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" routerLink="/register">Rejestracja</a>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>
