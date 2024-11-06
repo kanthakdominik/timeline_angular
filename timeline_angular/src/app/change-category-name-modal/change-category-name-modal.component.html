@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="changeCategoryNameModalLabel">Kategoria - zmień nazwę</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="changeNameForm" (ngSubmit)="onSubmit()">
+      <input type="hidden" formControlName="category_id">
+      <div class="mb-3">
+        <label for="categoryName" class="form-label">Podaj nową nazwę</label>
+        <input type="text" class="form-control" id="categoryName" formControlName="name" required>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="changeNameForm.invalid">Zapisz</button>
+    </form>
+  </div>

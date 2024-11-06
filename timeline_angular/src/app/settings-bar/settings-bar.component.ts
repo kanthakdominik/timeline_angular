@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCategoryModalComponent } from '../add-category-modal/add-category-modal.component';
+import { AddEventModalComponent } from '../add-event-modal/add-event-modal.component';
 
 @Component({
   selector: 'app-settings-bar',
@@ -19,6 +20,15 @@ export class SettingsBarComponent {
 
   openAddCategoryModal(): void {
     const modalRef = this.modalService.open(AddCategoryModalComponent);
+    modalRef.result.then((result) => {
+      console.log('Modal closed with result:', result);
+    }, (reason) => {
+      console.log('Modal dismissed with reason:', reason);
+    });
+  }
+
+  openAddEventModal(): void {
+    const modalRef = this.modalService.open(AddEventModalComponent);
     modalRef.result.then((result) => {
       console.log('Modal closed with result:', result);
     }, (reason) => {

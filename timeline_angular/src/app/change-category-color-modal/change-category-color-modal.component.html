@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="changeCategoryColorModalLabel">Kategoria - Zmień kolor</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="changeColorForm" (ngSubmit)="onSubmit()">
+      <input type="hidden" formControlName="category_id">
+      <div class="mb-3">
+        <label for="categoryColor" class="form-label">Wybierz kolor</label>
+        <input type="color" class="form-control" id="categoryColor" formControlName="color" required>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="changeColorForm.invalid">Zapisz</button>
+    </form>
+  </div>

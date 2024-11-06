@@ -1,4 +1,3 @@
-<!-- categories-bar.component.html -->
 <div class="row mb-4 no-print" id="categories-bar">
     <div class="col-md-12">
         <div class="filter-bar bar-properties d-flex justify-content-between align-items-center p-3 rounded shadow-sm">
@@ -16,11 +15,11 @@
                     @if (isLoggedIn) {
                     <div class="mt-2 d-flex justify-content-center align-items-center">
                         <button class="btn btn-sm btn-outline-primary change-name-btn mx-1" type="button"
-                            (click)="editCategoryName(category.id)" title="Edytuj nazwę">
+                        (click)="openChangeCategoryNameModal(category.id)" title="Edytuj nazwę">
                             <i class="fas fa-pen"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-secondary change-color-btn mx-1" type="button"
-                            (click)="editCategoryColor(category.id)" title="Edytuj kolor">
+                        (click)="openChangeCategoryColorModal(category.id)" title="Edytuj kolor">
                             <i class="fas fa-paint-brush"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-danger delete-category-btn mx-1" type="button"
