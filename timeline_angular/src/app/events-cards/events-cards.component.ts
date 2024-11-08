@@ -26,10 +26,12 @@ export class EventsCardsComponent {
  
   ngOnInit(): void {
     this.categories = this.dataService.getCategories();
-    this.events = this.dataService.getEvents().map(event => ({
-      ...event,
-      category_color: this.dataService.getCategoryColorById(event.category_id)
-    }));
+    this.events = this.dataService.getEvents()
+      .map(event => ({
+        ...event,
+        category_color: this.dataService.getCategoryColorById(event.category_id)
+      }))
+      .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
   }
 
   getCategoryName(category_id: number): string {
@@ -47,10 +49,12 @@ export class EventsCardsComponent {
     modalRef.result.then((result) => {
       if (result) {
         this.dataService.updateEvent(result);
-        this.events = this.dataService.getEvents().map(event => ({
-          ...event,
-          category_color: this.dataService.getCategoryColorById(event.category_id)
-        }));
+        this.events = this.dataService.getEvents()
+          .map(event => ({
+            ...event,
+            category_color: this.dataService.getCategoryColorById(event.category_id)
+          }))
+          .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()); // Refresh the events list
       }
       console.log('Modal closed with result:', result);
     }, (reason) => {
