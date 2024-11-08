@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="editEventModalLabel">Edytuj Wydarzenie</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="editEventForm" (ngSubmit)="onSubmit()">
+        <input type="hidden" formControlName="id">
+        <div class="mb-3">
+            <label for="eventName" class="form-label">Nazwa <span class="required-asterisk">*</span></label>
+            <input type="text" class="form-control" id="eventName" formControlName="name" required>
+            @if(editEventForm.get('name')?.invalid && editEventForm.get('name')?.touched) {
+            <div class="text-danger">
+                Nazwa wydarzenia jest wymagana.
+            </div>
+            }
+        </div>
+        <div class="mb-3">
+            <label for="eventDescription" class="form-label">Opis</label>
+            <textarea class="form-control" id="eventDescription" formControlName="description" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="eventStartDate" class="form-label">Data rozpoczęcia <span
+                    class="required-asterisk">*</span></label>
+            <input type="date" class="form-control" id="eventStartDate" formControlName="start_date" required>
+            @if(editEventForm.get('start_date')?.invalid && editEventForm.get('start_date')?.touched) {
+            <div class="text-danger">
+                Data rozpoczęcia jest wymagana.
+            </div>
+            }
+        </div>
+        <div class="mb-3">
+            <label for="eventEndDate" class="form-label">Data zakończenia <span
+                    class="required-asterisk">*</span></label>
+            <input type="date" class="form-control" id="eventEndDate" formControlName="end_date" required>
+            @if(editEventForm.get('end_date')?.invalid && editEventForm.get('end_date')?.touched) {
+            <div class="text-danger">
+                Data zakończenia jest wymagana.
+            </div>
+            }
+        </div>
+        <div class="mb-3">
+            <label for="eventImage" class="form-label">Logo</label>
+            <input type="file" class="form-control" id="eventImage" (change)="onFileChange($event)">
+        </div>
+        <div class="mb-3">
+            <label for="eventCategory" class="form-label">Kategoria <span class="required-asterisk">*</span></label>
+            <select class="form-control" id="eventCategory" formControlName="category_id" required>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+            @if(editEventForm.get('category_id')?.invalid && editEventForm.get('category_id')?.touched) {
+            <div class="text-danger">
+                Kategoria jest wymagana.
+            </div>
+            }
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="editEventForm.invalid">Zapisz zmiany</button>
+    </form>
+</div>

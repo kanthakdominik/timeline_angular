@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EditEventModalComponent } from '../edit-event-modal/edit-event-modal.component';
+import { DataService } from '../services/data-service.service';
+import { Event } from '../models/event.model';
+import { Category } from '../models/category.model';
 
-interface Event {
-  id: number;
-  name: string;
-  start_date: string;
-  end_date: string;
-  description: string;
-  image: string;
-  category: {
-    id: number;
-    color: string;
-  };
+interface EventWithCategoryColor extends Event {
+  category_color?: string;
 }
 
 @Component({
@@ -22,43 +18,43 @@ interface Event {
   styleUrl: './events-cards.component.css'
 })
 export class EventsCardsComponent {
+  events: EventWithCategoryColor[] = [];
+  categories: Category[] = [];
   isLoggedIn: boolean = true; // Replace with actual authentication logic
-  events: Event[] = [
-    {
-      id: 1,
-      name: 'Event 1',
-      start_date: '2024-01-01',
-      end_date: '2024-01-02',
-      description: 'Description for Event 1',
-      image: 'base64image1',
-      category: { id: 1, color: '#ff0000' }
-    },
-    {
-      id: 2,
-      name: 'Event 2',
-      start_date: '2024-02-01',
-      end_date: '2024-02-02',
-      description: 'Description for Event 2',
-      image: 'base64image2',
-      category: { id: 2, color: '#00ff00' }
-    },
-    {
-      id: 3,
-      name: 'Event 3',
-      start_date: '2024-03-01',
-      end_date: '2024-03-02',
-      description: 'Description for Event 3',
-      image: 'base64image3',
-      category: { id: 3, color: '#0000ff' }
-    }
-  ]; // Replace with actual events data
 
-  // Implement methods for button actions
-  openEditModal(eventId: number) {
-    // Implement open edit modal logic
+  constructor(private modalService: NgbModal, private dataService: DataService) {}
+ 
+  ngOnInit(): void {
+    this.categories = this.dataService.getCategories();
+    this.events = this.dataService.getEvents().map(event => ({
+      ...event,
+      category_color: this.dataService.getCategoryColorById(event.category_id)
+    }));
+  }
+
+  getCategoryName(category_id: number): string {
+    const category = this.categories.find(cat => cat.id === category_id);
+    return category ? category.name : 'Nieznana';
   }
 
   deleteEvent(eventId: number) {
     // Implement delete event logic
+  }
+
+  openEditEventModal(event: Event): void {
+    const modalRef = this.modalService.open(EditEventModalComponent);
+    modalRef.componentInstance.event = event;
+    modalRef.result.then((result) => {
+      if (result) {
+        this.dataService.updateEvent(result);
+        this.events = this.dataService.getEvents().map(event => ({
+          ...event,
+          category_color: this.dataService.getCategoryColorById(event.category_id)
+        }));
+      }
+      console.log('Modal closed with result:', result);
+    }, (reason) => {
+      console.log('Modal dismissed with reason:', reason);
+    });
   }
 }
