@@ -2,9 +2,9 @@ import { Component, OnInit, AfterViewInit, Input} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DataService } from '../services/data-service.service';
-import { Event } from '../models/event.model';
-import { Category } from '../models/category.model';
+import { DataService } from '../../services/data-service.service';
+import { Event } from '../../models/event.model';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-edit-event-modal',

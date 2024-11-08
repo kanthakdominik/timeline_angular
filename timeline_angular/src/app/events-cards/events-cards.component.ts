@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditEventModalComponent } from '../edit-event-modal/edit-event-modal.component';
+import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-modal.component';
 import { DataService } from '../services/data-service.service';
 import { Event } from '../models/event.model';
 import { Category } from '../models/category.model';

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ChangeCategoryColorModalComponent } from '../change-category-color-modal/change-category-color-modal.component';
-import { ChangeCategoryNameModalComponent } from '../change-category-name-modal/change-category-name-modal.component';
-import { DataService } from '../services/data-service.service';
-import { Category } from '../models/category.model';
+import { ChangeCategoryColorModalComponent } from '../../modals/change-category-color-modal/change-category-color-modal.component';
+import { ChangeCategoryNameModalComponent } from '../../modals/change-category-name-modal/change-category-name-modal.component';
+import { DataService } from '../../services/data-service.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-categories-bar',

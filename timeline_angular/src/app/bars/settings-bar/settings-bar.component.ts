@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AddCategoryModalComponent } from '../add-category-modal/add-category-modal.component';
-import { AddEventModalComponent } from '../add-event-modal/add-event-modal.component';
+import { AddCategoryModalComponent } from '../../modals/add-category-modal/add-category-modal.component';
+import { AddEventModalComponent } from '../../modals/add-event-modal/add-event-modal.component';
 
 @Component({
   selector: 'app-settings-bar',
