@@ -12,7 +12,6 @@ export class DataService {
     { id: 3, name: 'kulturalna', color: '#eb6b56' },
     { id: 4, name: 'edukacyjna', color: '#b05f6d' },
     { id: 5, name: 'rekreacyjna', color: '#9969c7' },
-    { id: 6, name: 'rekreacyjna2', color: '#996d7' }
   ];
 
   private events: Event[] = [
@@ -99,6 +98,8 @@ export class DataService {
   }
 
   addCategory(category: Category): void {
+    const newId = Math.max(...this.categories.map(category => category.id)) + 1;
+    category.id = newId;
     this.categories.push(category);
   }
 

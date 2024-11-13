@@ -24,8 +24,6 @@ export class AddCategoryModalComponent implements OnInit {
 
   onSubmit(): void {
     if (this.addCategoryForm.valid) {
-      // Handle form submission
-      console.log(this.addCategoryForm.value);
       this.modal.close(this.addCategoryForm.value);
     }
   }

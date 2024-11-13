@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCategoryModalComponent } from '../../modals/add-category-modal/add-category-modal.component';
 import { AddEventModalComponent } from '../../modals/add-event-modal/add-event-modal.component';
+import { DataService } from '../../services/data-service.service';
 
 @Component({
   selector: 'app-settings-bar',
@@ -13,17 +14,17 @@ import { AddEventModalComponent } from '../../modals/add-event-modal/add-event-m
 export class SettingsBarComponent {
   isLoggedIn: boolean = true; // Replace with actual authentication logic
 
-  constructor(private modalService: NgbModal) {
-    // Replace with actual authentication check
-    this.isLoggedIn = true; // Example: Set to true for demonstration
-  }
+  constructor(
+    private modalService: NgbModal,
+    private dataService: DataService,
+  ) {}
 
   openAddCategoryModal(): void {
     const modalRef = this.modalService.open(AddCategoryModalComponent);
-    modalRef.result.then((result) => {
-      console.log('Modal closed with result:', result);
-    }, (reason) => {
-      console.log('Modal dismissed with reason:', reason);
+    modalRef.result.then((newCategory) => {
+      if(newCategory) {
+        this.dataService.addCategory(newCategory);
+      }
     });
   }
 

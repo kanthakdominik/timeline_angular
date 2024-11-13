@@ -72,7 +72,6 @@ export class CategoriesBarComponent implements OnInit {
     modalRef.componentInstance.setCategoryId(categoryId);
     modalRef.result.then((color) => {
       if (color) {
-        console.log('color: ' + color)
         this.dataService.updateCategoryColor(categoryId, color);
         this.categories = this.dataService.getCategories();
       }
