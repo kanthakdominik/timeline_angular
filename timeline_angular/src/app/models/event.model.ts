@@ -4,6 +4,7 @@ export interface Event {
     start_date: string;
     end_date: string;
     description: string;
+    image_path: string;
     image: string;
     category_id: number;
   }

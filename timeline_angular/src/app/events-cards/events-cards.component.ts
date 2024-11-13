@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-modal.component';
@@ -17,21 +17,22 @@ interface EventWithCategoryColor extends Event {
   templateUrl: './events-cards.component.html',
   styleUrl: './events-cards.component.css'
 })
-export class EventsCardsComponent {
+export class EventsCardsComponent implements OnInit {
   events: EventWithCategoryColor[] = [];
   categories: Category[] = [];
   isLoggedIn: boolean = true; // Replace with actual authentication logic
 
   constructor(private modalService: NgbModal, private dataService: DataService) {}
  
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.categories = this.dataService.getCategories();
-    this.events = this.dataService.getEvents()
-      .map(event => ({
-        ...event,
-        category_color: this.dataService.getCategoryColorById(event.category_id)
-      }))
-      .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+    const events = this.dataService.getEvents();
+    this.events = await Promise.all(events.map(async event => ({
+      ...event,
+      image: await this.dataService.getImageAsBase64(event.image_path),
+      category_color: this.dataService.getCategoryColorById(event.category_id)
+    })));
+    this.events.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
   }
 
   getCategoryName(category_id: number): string {
@@ -41,6 +42,12 @@ export class EventsCardsComponent {
 
   deleteEvent(eventId: number) {
     // Implement delete event logic
+  const event = this.events.find(event => event.id === eventId);
+  if (event) {
+    console.log('Event properties:', event);
+  } else {
+    console.log('Event not found');
+  }
   }
 
   openEditEventModal(event: Event): void {
