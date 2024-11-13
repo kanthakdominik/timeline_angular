@@ -2,8 +2,9 @@
     <div class="col-md-12">
         <div class="filter-bar bar-properties d-flex justify-content-between align-items-center p-3 rounded shadow-sm">
             <div class="d-flex">
-                <button id="toggle-cards-btn" class="btn btn-sm btn-outline-primary mx-1" (click)="toggleCards()">Rozwiń
-                    wszystkie</button>
+                <button id="toggle-cards-btn" class="btn btn-sm btn-outline-primary mx-1" (click)="toggleCards()">
+                    {{ areAllCardsToggled ? 'Zwiń wszystkie' : 'Rozwiń wszystkie' }}
+                </button>
             </div>
             <div class="d-flex justify-content-center align-items-center flex-grow-1 mx-3">
                 @for (category of categories; track category.name) {
@@ -15,11 +16,11 @@
                     @if (isLoggedIn) {
                     <div class="mt-2 d-flex justify-content-center align-items-center">
                         <button class="btn btn-sm btn-outline-primary change-name-btn mx-1" type="button"
-                        (click)="openChangeCategoryNameModal(category.id)" title="Edytuj nazwę">
+                            (click)="openChangeCategoryNameModal(category.id)" title="Edytuj nazwę">
                             <i class="fas fa-pen"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-secondary change-color-btn mx-1" type="button"
-                        (click)="openChangeCategoryColorModal(category.id)" title="Edytuj kolor">
+                            (click)="openChangeCategoryColorModal(category.id)" title="Edytuj kolor">
                             <i class="fas fa-paint-brush"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-danger delete-category-btn mx-1" type="button"

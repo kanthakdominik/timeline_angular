@@ -4,7 +4,7 @@
         <div class="timeline-2 event-item" [ngClass]="{'left-2': $index % 2 === 0, 'right-2': $index % 2 !== 0}"
             [attr.data-category-id]="event.category_id">
             <div>
-                <div class="card card-no-break" [ngStyle]="{'background-color': event.category_color}">
+                <div class="card card-no-break" [ngStyle]="{'background-color': event.category_color}" (click)="toggleCard(event)">
                     <div class="card-body p-4">
                         <div class="row">
                             <div class="col-md-6">
@@ -19,8 +19,9 @@
                             </div>
                         </div>
                         <p class="mb-0 element-hidden mt-4 text-justify">{{ event.description }}</p>
+                        <p class="mb-0 mt-4 text-justify" [ngClass]="{'element-hidden': !event.isToggled}">{{ event.description }}</p>
                     </div>
-                    <span class="click-me no-print" id="toggleLabel">Rozwiń</span>
+                    <span class="click-me no-print" id="toggleLabel">{{ event.isToggled ? 'Zwiń' : 'Rozwiń' }}</span>
                 </div>
                 @if (isLoggedIn) {
                 <div class="d-flex justify-content-end" id="events-cards-buttons">
