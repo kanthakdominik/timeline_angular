@@ -1,6 +1,6 @@
 <div class="container py-5 print-view" id="event-cards">
     <div class="main-timeline-2">
-        @for (event of events; track event.name) {
+        @for (event of filteredEvents; track event.name) {
         <div class="timeline-2 event-item" [ngClass]="{'left-2': $index % 2 === 0, 'right-2': $index % 2 !== 0}"
             [attr.data-category-id]="event.category_id">
             <div>

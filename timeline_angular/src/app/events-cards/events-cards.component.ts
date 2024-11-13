@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-modal.component';
 import { DataService } from '../services/data-service.service';
-import { ToggleService } from '../services/toggle.service';
+import { EventService } from '../services/event.service';
 import { Event } from '../models/event.model';
 import { Category } from '../models/category.model';
 
@@ -21,14 +21,15 @@ interface EventWithCategoryColor extends Event {
 })
 export class EventsCardsComponent implements OnInit {
   events: EventWithCategoryColor[] = [];
+  filteredEvents: EventWithCategoryColor[] = [];
   categories: Category[] = [];
   isLoggedIn: boolean = true; // Replace with actual authentication logic
 
   constructor(
     private modalService: NgbModal,
     private dataService: DataService,
-    private toggleService: ToggleService,
-  ) {}
+    private eventService: EventService,
+  ) { }
 
   async ngOnInit(): Promise<void> {
     this.categories = this.dataService.getCategories();
@@ -39,10 +40,15 @@ export class EventsCardsComponent implements OnInit {
       category_color: this.dataService.getCategoryColorById(event.category_id),
       isToggled: false
     })));
+    this.filteredEvents = [...this.events];
     this.events.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
- 
-    this.toggleService.toggleAllCards$.subscribe((state: boolean) => {
+    this.filteredEvents.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+
+    this.eventService.toggleAllCards$.subscribe((state: boolean) => {
       this.toggleAllCards(state);
+    });
+    this.eventService.filterEvents$.subscribe((categoryId: number | null) => {
+      this.filterEventsByCategory(categoryId);
     });
   }
 
@@ -61,10 +67,24 @@ export class EventsCardsComponent implements OnInit {
     return category ? category.name : 'Nieznana';
   }
 
+  filterEventsByCategory(categoryId: number | null): void {
+    if (categoryId === null) {
+      this.filteredEvents = [...this.events];
+    } else {
+      this.filteredEvents = this.events.filter(event => event.category_id === categoryId);
+    }
+  }
+
   deleteEvent(eventId: number) {
-    // Implement delete event logic
     const event = this.events.find(event => event.id === eventId);
-   
+    if (event) {
+      const confirmDelete = window.confirm(`Are you sure you want to delete the event: ${event.name}?`);
+      if (confirmDelete) {
+        this.dataService.deleteEvent(eventId);
+        this.events = this.events.filter(e => e.id !== eventId);
+        this.filteredEvents = this.filteredEvents.filter(e => e.id !== eventId);
+      }
+    }
   }
 
   openEditEventModal(event: Event): void {

@@ -10,7 +10,9 @@
                 @for (category of categories; track category.name) {
                 <div class="category-item mx-2 text-center">
                     <button class="btn category-btn" type="button" [attr.data-category-id]="category.id"
-                        [ngStyle]="{'background-color': category.color, 'color': '#fff'}">
+                        [ngStyle]="{'background-color': category.color, 'color': '#fff'}"
+                        [ngClass]="{'active-category': activeCategoryId === category.id}"
+                        (click)="filterEvents(category.id)">
                         {{ category.name }}
                     </button>
                     @if (isLoggedIn) {
