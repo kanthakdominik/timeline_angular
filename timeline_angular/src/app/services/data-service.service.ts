@@ -11,7 +11,8 @@ export class DataService {
     { id: 2, name: 'muzyczna', color: '#ffc153' },
     { id: 3, name: 'kulturalna', color: '#eb6b56' },
     { id: 4, name: 'edukacyjna', color: '#b05f6d' },
-    { id: 5, name: 'rekreacyjna', color: '#9969c7' }
+    { id: 5, name: 'rekreacyjna', color: '#9969c7' },
+    { id: 6, name: 'rekreacyjna2', color: '#996d7' }
   ];
 
   private events: Event[] = [
@@ -101,19 +102,26 @@ export class DataService {
     this.categories.push(category);
   }
 
-  updateCategory(updatedCategory: Category): void {
-    const index = this.categories.findIndex(category => category.id === updatedCategory.id);
-    if (index !== -1) {
-      this.categories[index] = updatedCategory;
+  updateCategoryColor(id: number, newColor: string): void {
+    const category = this.categories.find(category => category.id === id);
+    if (category) {
+      category.color = newColor;
+    }
+  }
+
+  updateCategoryName(id: number, newName: string): void {
+    const category = this.categories.find(category => category.id === id);
+    if (category) {
+      category.name = newName;
     }
   }
 
   deleteCategory(id: number): void {
-    const hasEvents = this.events.some(event => event.category_id === id);
-    if (hasEvents) {
-      throw new Error('Cannot delete category with associated events.');
-    }
     this.categories = this.categories.filter(category => category.id !== id);
+  }
+
+  isCategoryInUse(id: number): boolean {
+    return this.events.some(event => event.category_id === id);
   }
 
   getCategoryColorById(id: number): string | undefined {

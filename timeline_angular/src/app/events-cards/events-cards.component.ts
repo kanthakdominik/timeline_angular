@@ -64,11 +64,7 @@ export class EventsCardsComponent implements OnInit {
   deleteEvent(eventId: number) {
     // Implement delete event logic
     const event = this.events.find(event => event.id === eventId);
-    if (event) {
-      console.log('Event properties:', event);
-    } else {
-      console.log('Event not found');
-    }
+   
   }
 
   openEditEventModal(event: Event): void {

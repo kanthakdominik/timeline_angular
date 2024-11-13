@@ -14,7 +14,10 @@ export class ChangeCategoryColorModalComponent implements OnInit {
   changeColorForm!: FormGroup;
   private categoryId: number | null = null;
 
-  constructor(public modal: NgbActiveModal, private fb: FormBuilder) {}
+  constructor(
+    public modal: NgbActiveModal, 
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.changeColorForm = this.fb.group({
@@ -33,15 +36,12 @@ export class ChangeCategoryColorModalComponent implements OnInit {
     this.categoryId = categoryId;
     if (this.changeColorForm) {
       this.changeColorForm.patchValue({ category_id: categoryId });
-      console.log('Patched Category ID:', this.changeColorForm.get('category_id')?.value);
     }
   }
   
   onSubmit(): void {
     if (this.changeColorForm.valid) {
-      // Handle form submission
-      console.log(this.changeColorForm.value);
-      this.modal.close(this.changeColorForm.value);
+      this.modal.close(this.changeColorForm.value.color);
     }
   }
 }

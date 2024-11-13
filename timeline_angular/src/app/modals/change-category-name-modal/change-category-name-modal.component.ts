@@ -39,9 +39,7 @@ export class ChangeCategoryNameModalComponent implements OnInit, AfterViewInit {
 
   onSubmit(): void {
     if (this.changeNameForm.valid) {
-      // Handle form submission
-      console.log(this.changeNameForm.value);
-      this.modal.close(this.changeNameForm.value);
+      this.modal.close(this.changeNameForm.value.name);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeCategoryColorModalComponent } from '../../modals/change-category-color-modal/change-category-color-modal.component';
@@ -20,10 +20,12 @@ export class CategoriesBarComponent implements OnInit {
   isLoggedIn: boolean = true; // Replace with actual authentication logic
 
   constructor(
-    private modalService: NgbModal, 
+    private modalService: NgbModal,
     private dataService: DataService,
-    private toggleService: ToggleService
-  ) {}
+    private toggleService: ToggleService,
+    private renderer: Renderer2
+
+  ) { }
 
   ngOnInit(): void {
     this.categories = this.dataService.getCategories();
@@ -35,38 +37,56 @@ export class CategoriesBarComponent implements OnInit {
   }
 
   printView() {
-    // Implement print view logic
+    const eventCards = document.querySelectorAll('.event-item');
+    eventCards.forEach(card => {
+      const elementsToToggle = card.querySelectorAll('.element-hidden');
+      elementsToToggle.forEach(element => {
+        this.renderer.setStyle(element, 'display', 'block');
+      });
+    });
+
+    window.print();
+
+    eventCards.forEach(card => {
+      const elementsToToggle = card.querySelectorAll('.element-hidden');
+      elementsToToggle.forEach(element => {
+        this.renderer.setStyle(element, 'display', 'none');
+      });
+    });
   }
-  
+
   deleteCategory(categoryId: number) {
-    // Implement delete category logic
+    const categoryInUse = this.dataService.isCategoryInUse(categoryId);
+    if (categoryInUse) {
+      alert('Ta kategoria jest przypisana do wydarzenia i nie można jej usunąć');
+    } else {
+      if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
+      this.dataService.deleteCategory(categoryId);
+      this.categories = this.dataService.getCategories();
+      }
+    }
   }
 
   openChangeCategoryColorModal(categoryId: number): void {
     const modalRef = this.modalService.open(ChangeCategoryColorModalComponent);
     modalRef.componentInstance.setCategoryId(categoryId);
-    modalRef.result.then((result) => {
-      if (result) {
-        this.dataService.updateCategory(result);
+    modalRef.result.then((color) => {
+      if (color) {
+        console.log('color: ' + color)
+        this.dataService.updateCategoryColor(categoryId, color);
         this.categories = this.dataService.getCategories();
       }
-      console.log('Modal closed with result:', result);
-    }, (reason) => {
-      console.log('Modal dismissed with reason:', reason);
     });
   }
 
   openChangeCategoryNameModal(categoryId: number): void {
     const modalRef = this.modalService.open(ChangeCategoryNameModalComponent);
     modalRef.componentInstance.setCategoryId(categoryId.toString());
-    modalRef.result.then((result) => {
-      if (result) {
-        this.dataService.updateCategory(result);
+    modalRef.result.then((name) => {
+      if (name) {
+        this.dataService.updateCategoryName(categoryId, name);
         this.categories = this.dataService.getCategories();
       }
-      console.log('Modal closed with result:', result);
-    }, (reason) => {
-      console.log('Modal dismissed with reason:', reason);
     });
   }
 }
