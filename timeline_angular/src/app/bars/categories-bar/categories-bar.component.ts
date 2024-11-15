@@ -69,7 +69,6 @@ export class CategoriesBarComponent implements OnInit {
   }
 
   filterEvents(categoryId: number): void {
-    console.log('dfgh')
     if (this.activeCategoryId === categoryId) {
       this.activeCategoryId = null;
       this.eventService.filterEvents(null);

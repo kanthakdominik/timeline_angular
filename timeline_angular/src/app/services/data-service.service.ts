@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Event } from '../models/event.model';
 import { Category } from '../models/category.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -44,11 +46,14 @@ export class DataService {
 
   constructor() { }
 
+  private eventsSubject = new BehaviorSubject<Event[]>(this.events);
+  events$ = this.eventsSubject.asObservable();
+
   async getImageAsBase64(image_path: string): Promise<string> {
     try {
       const response = await fetch(image_path);
       const blob = await response.blob();
-      
+
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -75,12 +80,14 @@ export class DataService {
 
   addEvent(event: Event): void {
     this.events.push(event);
+    this.eventsSubject.next(this.events);
   }
 
   updateEvent(updatedEvent: Event): void {
     const index = this.events.findIndex(event => event.id === updatedEvent.id);
     if (index !== -1) {
       this.events[index] = updatedEvent;
+      this.eventsSubject.next(this.events);
     }
   }
 
@@ -128,5 +135,19 @@ export class DataService {
   getCategoryColorById(id: number): string | undefined {
     const category = this.categories.find(category => category.id === id);
     return category ? category.color : undefined;
+  }
+
+  // resolvers
+  mapEventsWithCategoryColor(events: Event[]): Event[] {
+    return events.map(event => ({
+      ...event,
+      category_color: this.getCategoryColorById(event.category_id)
+    }));
+  }
+
+  fetchAndMapEventsWithCategoryColor(): Observable<Event[]> {
+    return this.events$.pipe(
+      map(events => this.mapEventsWithCategoryColor(events))
+    );
   }
 }

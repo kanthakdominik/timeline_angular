@@ -6,6 +6,7 @@ import { DataService } from '../services/data-service.service';
 import { EventService } from '../services/event.service';
 import { Event } from '../models/event.model';
 import { Category } from '../models/category.model';
+import { ActivatedRoute } from '@angular/router';
 
 interface EventWithCategoryColor extends Event {
   category_color?: string;
@@ -29,20 +30,17 @@ export class EventsCardsComponent implements OnInit {
     private modalService: NgbModal,
     private dataService: DataService,
     private eventService: EventService,
+    private route: ActivatedRoute
   ) { }
 
   async ngOnInit(): Promise<void> {
     this.categories = this.dataService.getCategories();
-    const events = this.dataService.getEvents();
-    this.events = await Promise.all(events.map(async event => ({
-      ...event,
-      image: await this.dataService.getImageAsBase64(event.image_path),
-      category_color: this.dataService.getCategoryColorById(event.category_id),
-      isToggled: false
-    })));
-    this.filteredEvents = [...this.events];
-    this.events.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
-    this.filteredEvents.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+    this.route.data.subscribe(data => {
+      this.events = data['events'];
+      this.filteredEvents = [...this.events];
+      this.events.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+      this.filteredEvents.sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+    });
 
     this.eventService.toggleAllCards$.subscribe((state: boolean) => {
       this.toggleAllCards(state);
@@ -75,7 +73,7 @@ export class EventsCardsComponent implements OnInit {
     }
   }
 
-  deleteEvent(eventId: number) {
+  deleteEvent(eventId: number): void {
     const event = this.events.find(event => event.id === eventId);
     if (event) {
       const confirmDelete = window.confirm(`Are you sure you want to delete the event: ${event.name}?`);

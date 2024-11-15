@@ -3,7 +3,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data-service.service';
-import { Event } from '../../models/event.model';
 import { Category } from '../../models/category.model';
 
 @Component({
@@ -18,7 +17,11 @@ export class EditEventModalComponent implements OnInit, AfterViewInit {
   editEventForm!: FormGroup;
   categories: Category[] = [];
 
-  constructor(public modal: NgbActiveModal, private fb: FormBuilder, private dataService: DataService) {}
+  constructor(
+    public modal: NgbActiveModal, 
+    private fb: FormBuilder, 
+    private dataService: DataService
+  ) {}
 
   ngOnInit(): void {
     this.categories = this.dataService.getCategories();
@@ -65,8 +68,6 @@ export class EditEventModalComponent implements OnInit, AfterViewInit {
 
   onSubmit(): void {
     if (this.editEventForm.valid) {
-      // Handle form submission
-      console.log(this.editEventForm.value);
       this.modal.close(this.editEventForm.value);
     }
   }

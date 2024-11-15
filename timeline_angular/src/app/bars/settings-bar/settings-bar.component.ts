@@ -30,10 +30,11 @@ export class SettingsBarComponent {
 
   openAddEventModal(): void {
     const modalRef = this.modalService.open(AddEventModalComponent);
-    modalRef.result.then((result) => {
-      console.log('Modal closed with result:', result);
-    }, (reason) => {
-      console.log('Modal dismissed with reason:', reason);
+    modalRef.result.then((newEvent) => {
+      if (newEvent) {
+        console.log(newEvent);
+        this.dataService.addEvent(newEvent);
+      }
     });
   }
 }
