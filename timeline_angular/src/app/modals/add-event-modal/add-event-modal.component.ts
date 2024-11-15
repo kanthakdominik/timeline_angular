@@ -79,14 +79,17 @@ export class AddEventModalComponent implements OnInit {
   onSubmit(): void {
     if (this.addEventForm.valid) {
       const newEvent = this.addEventForm.value;
+      
       if (newEvent.image) {
         const reader = new FileReader();
         reader.onload = () => {
           newEvent.image = reader.result;
+          this.dataService.addEvent(newEvent);
           this.modal.close(newEvent);
         };
         reader.readAsDataURL(newEvent.image);
       } else {
+        this.dataService.addEvent(newEvent);
         this.modal.close(newEvent);
       }
     }

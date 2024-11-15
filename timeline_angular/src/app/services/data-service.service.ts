@@ -78,21 +78,24 @@ export class DataService {
     return this.events.find(event => event.id === id);
   }
 
-  addEvent(event: Event): void {
-    this.events.push(event);
-    this.eventsSubject.next(this.events);
+  addEvent(event: any): void {
+    const events = this.getEvents();
+    events.push(event);
+    this.eventsSubject.next(events);
   }
 
-  updateEvent(updatedEvent: Event): void {
-    const index = this.events.findIndex(event => event.id === updatedEvent.id);
+  updateEvent(event: Event): void {
+    const events = this.getEvents();
+    const index = events.findIndex(e => e.id === event.id);
     if (index !== -1) {
-      this.events[index] = updatedEvent;
-      this.eventsSubject.next(this.events);
+      events[index] = event;
+      this.eventsSubject.next(events);
     }
   }
 
-  deleteEvent(id: number): void {
-    this.events = this.events.filter(event => event.id !== id);
+  deleteEvent(eventId: number): void {
+    const events = this.getEvents().filter(e => e.id !== eventId);
+    this.eventsSubject.next(events);
   }
 
   // Category methods
