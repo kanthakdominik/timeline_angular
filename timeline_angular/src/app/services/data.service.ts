@@ -9,9 +9,12 @@ import { Category } from '../models/category.model';
 })
 export class DataService {
   private categoriesSubject = new BehaviorSubject<Category[]>(this.loadCategoriesFromSessionStorage());
-  categories$ = this.categoriesSubject.asObservable();
-
+  private activeCategoryFilterSubject = new BehaviorSubject<number | null>(null);
   private eventsSubject = new BehaviorSubject<Event[]>([]);
+
+
+  activeCategoryFilter$ = this.activeCategoryFilterSubject.asObservable();
+  categories$ = this.categoriesSubject.asObservable();
   events$ = this.eventsSubject.asObservable();
 
   constructor() {
@@ -77,6 +80,10 @@ export class DataService {
 
   private saveCategoriesToSessionStorage(categories: Category[]): void {
     sessionStorage.setItem('categories', JSON.stringify(categories));
+  }
+
+  setActiveCategoryFilter(categoryId: number | null): void {
+    this.activeCategoryFilterSubject.next(categoryId);
   }
 
   async getImageAsBase64(imageUrl: string): Promise<string> {

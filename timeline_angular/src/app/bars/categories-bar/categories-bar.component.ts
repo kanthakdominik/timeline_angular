@@ -27,7 +27,9 @@ export class CategoriesBarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.categories = this.dataService.getCategories();
+    this.dataService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   toggleCards() {
@@ -55,40 +57,51 @@ export class CategoriesBarComponent implements OnInit {
   }
 
   deleteCategory(categoryId: number) {
-    // const categoryInUse = this.dataService.isCategoryInUse(categoryId);
-    // if (categoryInUse) {
-    //   alert('Ta kategoria jest przypisana do wydarzenia i nie można jej usunąć');
-    // } else {
-    //   if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
-    //   this.dataService.deleteCategory(categoryId);
-    //   this.categories = this.dataService.getCategories();
-    //   }
-    // }
+    const categoryInUse = this.dataService.isCategoryInUse(categoryId);
+    if (categoryInUse) {
+      alert('Ta kategoria jest przypisana do wydarzenia i nie można jej usunąć');
+    } else {
+      if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
+        this.dataService.deleteCategory(categoryId);
+        this.dataService.getCategories().subscribe(categories => {
+          this.categories = categories;
+        });      }
+    }
   }
 
   filterEvents(categoryId: number): void {
-    //TODO
+    if (this.activeCategoryId === categoryId) {
+      this.activeCategoryId = null;
+      this.dataService.setActiveCategoryFilter(null);
+    } else {
+      this.activeCategoryId = categoryId;
+      this.dataService.setActiveCategoryFilter(categoryId);
+    }
   }
 
   openChangeCategoryColorModal(categoryId: number): void {
-    // const modalRef = this.modalService.open(ChangeCategoryColorModalComponent);
-    // modalRef.componentInstance.setCategoryId(categoryId);
-    // modalRef.result.then((color) => {
-    //   if (color) {
-    //     this.dataService.updateCategoryColor(categoryId, color);
-    //     this.categories = this.dataService.getCategories();
-    //   }
-    // });
+    const modalRef = this.modalService.open(ChangeCategoryColorModalComponent);
+    modalRef.componentInstance.setCategoryId(categoryId);
+    modalRef.result.then((color) => {
+      if (color) {
+        this.dataService.updateCategoryColor(categoryId, color);
+        this.dataService.getCategories().subscribe(categories => {
+          this.categories = categories;
+        });
+      }
+    });
   }
 
   openChangeCategoryNameModal(categoryId: number): void {
-    // const modalRef = this.modalService.open(ChangeCategoryNameModalComponent);
-    // modalRef.componentInstance.setCategoryId(categoryId.toString());
-    // modalRef.result.then((name) => {
-    //   if (name) {
-    //     this.dataService.updateCategoryName(categoryId, name);
-    //     this.categories = this.dataService.getCategories();
-    //   }
-    // });
+    const modalRef = this.modalService.open(ChangeCategoryNameModalComponent);
+    modalRef.componentInstance.setCategoryId(categoryId.toString());
+    modalRef.result.then((name) => {
+      if (name) {
+        this.dataService.updateCategoryName(categoryId, name);
+        this.dataService.getCategories().subscribe(categories => {
+          this.categories = categories;
+        });
+      }
+    });
   }
 }

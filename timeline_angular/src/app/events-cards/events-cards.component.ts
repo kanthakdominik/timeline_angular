@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Event } from '../models/event.model';
 import { DataService } from '../services/data.service';
 import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-modal.component';
@@ -12,19 +12,35 @@ import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-m
   templateUrl: './events-cards.component.html',
   styleUrl: './events-cards.component.css'
 })
-export class EventsCardsComponent implements OnInit{
+export class EventsCardsComponent implements OnInit {
   events: (Event & { categoryColor?: string, isToggled: boolean })[] = [];
-  isLoggedIn: boolean = true; 
+  activeCategoryId: number | null = null;
+  isLoggedIn: boolean = true;
 
   constructor(
     private dataService: DataService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.dataService.getCombinedEventData().subscribe(events => {
-      this.events = events;
+      if (this.activeCategoryId === null) {
+        this.events = events;
+      } else {
+        this.events = events.filter(event => event.category_id === this.activeCategoryId);
+      }
       console.log('Fetched combined events:', this.events);
+    });
+
+    this.dataService.activeCategoryFilter$.subscribe(categoryId => {
+      this.activeCategoryId = categoryId;
+      this.dataService.getCombinedEventData().subscribe(events => {
+        if (categoryId === null) {
+          this.events = events;
+        } else {
+          this.events = events.filter(event => event.category_id === categoryId);
+        }
+      });
     });
   }
 
