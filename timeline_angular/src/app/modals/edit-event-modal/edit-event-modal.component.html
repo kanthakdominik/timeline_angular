@@ -35,9 +35,30 @@
         </div>
       }
       <div class="mb-3">
-        <label for="image_path" class="form-label">Ścieżka obrazu</label>
-        <input type="text" class="form-control" id="image_path" formControlName="image_path">
+        <label for="category" class="form-label">Kategoria</label>
+        <select class="form-select" id="category" formControlName="category_id">
+          <option value="">Wybierz kategorię</option>
+          @for(category of categories; track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+        @if(editEventForm.get('category_id')?.invalid && editEventForm.get('category_id')?.touched) {
+          <div class="text-danger small">Wybór kategorii jest wymagany</div>
+        }
       </div>
+      <div class="mb-3">
+        <label class="form-label">Logo</label>
+        <input type="file" class="form-control" accept="image/*" (change)="onImageSelected($event)">
+        <input type="hidden" formControlName="image">
+      </div>
+      @if(imageError) {
+        <div class="text-danger mt-1 small">
+          {{ imageError }}
+        </div>
+      }
+      <small class="form-text text-muted mt-1 d-block">
+        Dozwolone formaty: JPG, PNG, GIF. Maksymalny rozmiar: 5MB
+      </small>
     </form>
   </div>
   <div class="modal-footer">
