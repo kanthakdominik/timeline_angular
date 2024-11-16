@@ -1,24 +1,19 @@
-import { FormControl } from '@angular/forms';
+import { AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
 
-export function endDateValidator(control: FormControl): { [key: string]: boolean } | null {
-  const startDate = control.parent?.get('start_date')?.value;
-  const endDate = control.value;
-  if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-    return { 'endDateInvalid': true };
-  }
-  return null;
-} 
+export class CustomValidators {
+  static dateOrder(controlGroup: AbstractControl): ValidationErrors | null {
+    const formGroup = controlGroup as FormGroup;
+    const startDate = formGroup.get('start_date')?.value;
+    const endDate = formGroup.get('end_date')?.value;
 
-export function imageValidator(control: FormControl): { [key: string]: boolean } | null {
-    const file = control.value;
-    if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
-      if (!allowedTypes.includes(file.type)) {
-        return { 'invalidFileType': true };
-      }
-      if (file.size > 2048 * 1024) {
-        return { 'fileTooLarge': true };
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      if (end < start) {
+        return { dateError: 'Data zakończenia nie może być wcześniejsza niż data rozpoczęcia' };
       }
     }
     return null;
   }
+}

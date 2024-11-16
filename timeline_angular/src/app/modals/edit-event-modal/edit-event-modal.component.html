@@ -1,0 +1,46 @@
+<div class="modal-header">
+    <h4 class="modal-title">Edytuj Wydarzenie</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="onClose()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editEventForm" (ngSubmit)="onSave()">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nazwa</label>
+        <input type="text" class="form-control" id="name" formControlName="name">
+        @if(editEventForm.get('name')?.invalid && editEventForm.get('name')?.touched) {
+          <div class="text-danger">Nazwa jest wymagana</div>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Opis</label>
+        <textarea class="form-control" id="description" formControlName="description"></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="start_date" class="form-label">Data rozpoczęcia</label>
+        <input type="date" class="form-control" id="start_date" formControlName="start_date">
+        @if(editEventForm.get('start_date')?.invalid && editEventForm.get('start_date')?.touched) {
+          <div class="text-danger">Data rozpoczęcia jest wymagana</div>
+        }
+      </div>
+      <div class="mb-3">
+        <label for="end_date" class="form-label">Data zakończenia</label>
+        <input type="date" class="form-control" id="end_date" formControlName="end_date">
+        @if(editEventForm.get('end_date')?.invalid && editEventForm.get('end_date')?.touched) {
+          <div class="text-danger">Data zakończenia jest wymagana</div>
+        }
+      </div>
+      @if(editEventForm.errors?.['dateError'] && (editEventForm.get('start_date')?.touched || editEventForm.get('end_date')?.touched)) {
+        <div class="text-danger mb-3">
+          {{ editEventForm.errors?.['dateError'] }}
+        </div>
+      }
+      <div class="mb-3">
+        <label for="image_path" class="form-label">Ścieżka obrazu</label>
+        <input type="text" class="form-control" id="image_path" formControlName="image_path">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="onClose()">Anuluj</button>
+    <button type="button" class="btn btn-primary" (click)="onSave()">Zapisz</button>
+  </div>
