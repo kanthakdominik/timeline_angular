@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCategoryModalComponent } from '../../modals/add-category-modal/add-category-modal.component';
-import { AddEventModalComponent } from '../../modals/add-event-modal/add-event-modal.component';
-import { DataService } from '../../services/data-service.service';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-settings-bar',
@@ -24,16 +23,6 @@ export class SettingsBarComponent {
     modalRef.result.then((newCategory) => {
       if(newCategory) {
         this.dataService.addCategory(newCategory);
-      }
-    });
-  }
-
-  openAddEventModal(): void {
-    const modalRef = this.modalService.open(AddEventModalComponent);
-    modalRef.result.then((newEvent) => {
-      if (newEvent) {
-        console.log(newEvent);
-        this.dataService.addEvent(newEvent);
       }
     });
   }

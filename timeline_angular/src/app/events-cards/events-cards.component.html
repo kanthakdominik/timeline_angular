@@ -1,10 +1,10 @@
 <div class="container py-5 print-view" id="event-cards">
     <div class="main-timeline-2">
-        @for (event of filteredEvents; track event.name) {
+        @for (event of events; track event.name) {
         <div class="timeline-2 event-item" [ngClass]="{'left-2': $index % 2 === 0, 'right-2': $index % 2 !== 0}"
             [attr.data-category-id]="event.category_id">
             <div>
-                <div class="card card-no-break" [ngStyle]="{'background-color': event.category_color}" (click)="toggleCard(event)">
+                <div class="card card-no-break" [ngStyle]="{'background-color': event.categoryColor}" (click)="toggleCard(event)">
                     <div class="card-body p-4">
                         <div class="row">
                             <div class="col-md-6">
@@ -25,10 +25,9 @@
                 </div>
                 @if (isLoggedIn) {
                 <div class="d-flex justify-content-end" id="events-cards-buttons">
-                    <button class="btn btn-outline-primary mt-3 no-print" type="button"
-                        (click)="openEditEventModal(event)">Edytuj</button>
+                    <button class="btn btn-outline-primary mt-3 no-print" type="button">Edytuj</button>
                     <button class="btn btn-outline-danger mt-3 no-print ms-3" type="button"
-                        (click)="deleteEvent(event.id)">Usuń</button>
+                       >Usuń</button>
                 </div>
                 }
             </div>
