@@ -136,6 +136,10 @@ export class DataService {
     this.saveEventsToSessionStorage(sortedEvents);
   }
 
+  getNextEventId(): number {
+    return Math.max(...this.eventsSubject.value.map(e => e.id), 0) + 1;
+  }
+
   // Category methods
   getCategories(): Observable<Category[]> {
     return this.categories$;

@@ -1,14 +1,14 @@
 <div class="modal-header">
-    <h4 class="modal-title">Edytuj Wydarzenie</h4>
+    <h4 class="modal-title">Dodaj nowe wydarzenie</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="onClose()"></button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="editEventForm" (ngSubmit)="onSave()">
+    <form [formGroup]="addEventForm" (ngSubmit)="onSave()">
       <div class="mb-3">
         <label for="name" class="form-label">Nazwa</label>
         <input type="text" class="form-control" id="name" formControlName="name">
-        @if(editEventForm.get('name')?.invalid && editEventForm.get('name')?.touched) {
-          <div class="text-danger">Nazwa jest wymagana</div>
+        @if(addEventForm.get('name')?.invalid && addEventForm.get('name')?.touched) {
+          <div class="text-danger small">Nazwa jest wymagana</div>
         }
       </div>
       <div class="mb-3">
@@ -18,25 +18,25 @@
       <div class="mb-3">
         <label for="start_date" class="form-label">Data rozpoczęcia</label>
         <input type="date" class="form-control" id="start_date" formControlName="start_date">
-        @if(editEventForm.get('start_date')?.invalid && editEventForm.get('start_date')?.touched) {
-          <div class="text-danger">Data rozpoczęcia jest wymagana</div>
+        @if(addEventForm.get('start_date')?.invalid && addEventForm.get('start_date')?.touched) {
+          <div class="text-danger small">Data rozpoczęcia jest wymagana</div>
         }
       </div>
       <div class="mb-3">
         <label for="end_date" class="form-label">Data zakończenia</label>
         <input type="date" class="form-control" id="end_date" formControlName="end_date">
-        @if(editEventForm.get('end_date')?.invalid && editEventForm.get('end_date')?.touched) {
-          <div class="text-danger">Data zakończenia jest wymagana</div>
+        @if(addEventForm.get('end_date')?.invalid && addEventForm.get('end_date')?.touched) {
+          <div class="text-danger small">Data zakończenia jest wymagana</div>
         }
       </div>
-      @if(editEventForm.errors?.['dateError'] && (editEventForm.get('start_date')?.touched || editEventForm.get('end_date')?.touched)) {
-        <div class="text-danger mb-3">
-          {{ editEventForm.errors?.['dateError'] }}
+      @if(addEventForm.errors?.['dateError'] && (addEventForm.get('start_date')?.touched || addEventForm.get('end_date')?.touched)) {
+        <div class="text-danger small mb-3">
+          {{ addEventForm.errors?.['dateError'] }}
         </div>
       }
-      @if(editEventForm.errors?.['dateOverlap'] && (editEventForm.get('start_date')?.touched || editEventForm.get('end_date')?.touched)) {
+      @if(addEventForm.errors?.['dateOverlap'] && (addEventForm.get('start_date')?.touched || addEventForm.get('end_date')?.touched)) {
         <div class="text-danger small mb-3">
-          {{ editEventForm.errors?.['dateOverlap'] }}
+          {{ addEventForm.errors?.['dateOverlap'] }}
         </div>
       }
       <div class="mb-3">
@@ -47,26 +47,30 @@
             <option [value]="category.id">{{ category.name }}</option>
           }
         </select>
-        @if(editEventForm.get('category_id')?.invalid && editEventForm.get('category_id')?.touched) {
+        @if(addEventForm.get('category_id')?.invalid && addEventForm.get('category_id')?.touched) {
           <div class="text-danger small">Wybór kategorii jest wymagany</div>
         }
       </div>
       <div class="mb-3">
         <label class="form-label">Logo</label>
-        <input type="file" class="form-control" accept="image/*" (change)="onImageSelected($event)">
-        <input type="hidden" formControlName="image">
+        <input type="file" 
+               class="form-control" 
+               accept="image/jpeg,image/png,image/gif"
+               (change)="onImageSelected($event)">
+        @if(imageError) {
+          <div class="text-danger small mt-1">
+            {{ imageError }}
+          </div>
+        }
+        <small class="form-text text-muted mt-1 d-block">
+          Dozwolone formaty: JPG, PNG, GIF. Maksymalny rozmiar: 5MB
+        </small>
       </div>
-      @if(imageError) {
-        <div class="text-danger mt-1 small">
-          {{ imageError }}
-        </div>
-      }
-      <small class="form-text text-muted mt-1 d-block">
-        Dozwolone formaty: JPG, PNG, GIF. Maksymalny rozmiar: 5MB
-      </small>
     </form>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="onClose()">Anuluj</button>
-    <button type="button" class="btn btn-primary" (click)="onSave()">Zapisz</button>
+    <button type="button" class="btn btn-primary" (click)="onSave()" [disabled]="addEventForm.invalid">
+      Dodaj
+    </button>
   </div>

@@ -8,7 +8,7 @@ import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-m
 @Component({
   selector: 'app-events-cards',
   standalone: true,
-  imports: [CommonModule, NgbModule, EditEventModalComponent],
+  imports: [CommonModule],
   templateUrl: './events-cards.component.html',
   styleUrl: './events-cards.component.css'
 })
@@ -41,7 +41,6 @@ export class EventsCardsComponent implements OnInit{
   }
 
   openEditModal(eventId: number): void {
-    console.log('Opening modal for event ID:', eventId);
     const modalRef = this.modalService.open(EditEventModalComponent);
     modalRef.componentInstance.eventId = eventId;
   }

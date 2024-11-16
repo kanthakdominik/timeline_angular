@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddCategoryModalComponent } from '../../modals/add-category-modal/add-category-modal.component';
+import { AddEventModalComponent } from '../../modals/add-event-modal/add-event-modal.component';
 import { DataService } from '../../services/data.service';
 
 @Component({
@@ -25,5 +26,9 @@ export class SettingsBarComponent {
         this.dataService.addCategory(newCategory);
       }
     });
+  }
+
+  openAddEventModal(): void {
+    const modalRef = this.modalService.open(AddEventModalComponent);
   }
 }

@@ -1,6 +1,7 @@
 import { AbstractControl, ValidationErrors, FormGroup } from '@angular/forms';
+import { Event as TimelineEvent } from '../models/event.model';
 
-export class CustomValidators {
+export class TimelineValidators {
 
   static dateOrder(controlGroup: AbstractControl): ValidationErrors | null {
     const formGroup = controlGroup as FormGroup;
@@ -31,5 +32,37 @@ export class CustomValidators {
       }
     }
     return null;
+  }
+
+  static dateOverlap(events: TimelineEvent[], currentEventId?: number) {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+      const startDate = formGroup.get('start_date')?.value;
+      const endDate = formGroup.get('end_date')?.value;
+
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        const hasOverlap = events.some(event => {
+          if (currentEventId && event.id === currentEventId) {
+            return false;
+          }
+
+          const eventStart = new Date(event.start_date);
+          const eventEnd = new Date(event.end_date);
+
+          return (
+            (start >= eventStart && start <= eventEnd) ||
+            (end >= eventStart && end <= eventEnd) ||
+            (start <= eventStart && end >= eventEnd)
+          );
+        });
+
+        if (hasOverlap) {
+          return { dateOverlap: 'W tym okresie istnieje już inne wydarzenie' };
+        }
+      }
+      return null;
+    };
   }
 }
