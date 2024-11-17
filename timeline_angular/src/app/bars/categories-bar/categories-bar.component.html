@@ -15,7 +15,7 @@
                         (click)="filterEvents(category.id)">
                         {{ category.name }}
                     </button>
-                    @if (isLoggedIn) {
+                    @if (isLoggedIn$ | async) {
                     <div class="mt-2 d-flex justify-content-center align-items-center">
                         <button class="btn btn-sm btn-outline-primary change-name-btn mx-1" type="button"
                             (click)="openChangeCategoryNameModal(category.id)" title="Edytuj nazwę">

@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Event } from '../models/event.model';
 import { DataService } from '../services/data.service';
+import { AuthService } from '../services/auth.service';
 import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-modal.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-events-cards',
@@ -15,21 +17,23 @@ import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-m
 export class EventsCardsComponent implements OnInit {
   events: (Event & { categoryColor?: string, isExpanded: boolean })[] = [];
   activeCategoryId: number | null = null;
-  isLoggedIn: boolean = true;
+  isLoggedIn$!: Observable<boolean>;
 
   constructor(
     private dataService: DataService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+
     this.dataService.getCombinedEventData().subscribe(events => {
       if (this.activeCategoryId === null) {
         this.events = events;
       } else {
         this.events = events.filter(event => event.category_id === this.activeCategoryId);
       }
-      console.log('Fetched combined events:', this.events);
     });
 
     this.dataService.activeCategoryFilter$.subscribe(categoryId => {

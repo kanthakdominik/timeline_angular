@@ -65,4 +65,10 @@ export class TimelineValidators {
       return null;
     };
   }
+
+  static passwordMatch(g: FormGroup): ValidationErrors | null {
+    return g.get('password')?.value === g.get('password_confirmation')?.value
+      ? null 
+      : { 'mismatch': true };
+  }
 }

@@ -1,10 +1,12 @@
-import { Component, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeCategoryColorModalComponent } from '../../modals/change-category-color-modal/change-category-color-modal.component';
 import { ChangeCategoryNameModalComponent } from '../../modals/change-category-name-modal/change-category-name-modal.component';
 import { DataService } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
 import { Category } from '../../models/category.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-categories-bar',
@@ -18,14 +20,18 @@ export class CategoriesBarComponent implements OnInit, AfterViewChecked {
   areAllCardsExpanded: boolean = false;
   activeCategoryId: number | null = null;  
   private shouldPrint = false;
-  isLoggedIn: boolean = true; // Replace with actual authentication logic
+  isLoggedIn$!: Observable<boolean>;
 
   constructor(
     private modalService: NgbModal,
-    private dataService: DataService
+    private dataService: DataService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+
     this.dataService.getCategories().subscribe(categories => {
       this.categories = categories;
     });
@@ -37,15 +43,21 @@ export class CategoriesBarComponent implements OnInit, AfterViewChecked {
   }
 
   printView() {
-    this.dataService.setCardsExpandedState(true);
-    this.shouldPrint = true;
+    Promise.resolve().then(() => {
+      this.dataService.setCardsExpandedState(true);
+      this.shouldPrint = true;
+      this.cdr.detectChanges();
+    });
   }
 
   ngAfterViewChecked() {
     if (this.shouldPrint) {
       this.shouldPrint = false;
       window.print();
-      this.dataService.setCardsExpandedState(false);
+      Promise.resolve().then(() => {
+        this.dataService.setCardsExpandedState(false);
+        this.cdr.detectChanges();
+      });
     }
   }
 

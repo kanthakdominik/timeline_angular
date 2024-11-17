@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bar-properties no-print" id="settings-bar">
     <div class="container-fluid">
-        @if(isLoggedIn) {
+        @if (isLoggedIn$ | async) {
         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
             <form class="d-flex">
                 <button class="btn btn-outline-success btn-lg" id="addNewEventButton" type="button"

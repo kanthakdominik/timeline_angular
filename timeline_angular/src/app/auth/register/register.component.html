@@ -1,0 +1,88 @@
+<app-main-bar></app-main-bar>
+<div class="container mt-5">
+    @if (successMessage) {
+    <div class="alert alert-success">
+        {{ successMessage }}
+    </div>
+    }
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">Rejestracja</div>
+                <div class="card-body">
+                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nazwa użytkownika</label>
+                            <input id="name" type="text" class="form-control" formControlName="name"
+                                [ngClass]="{'is-invalid': registerForm.get('name')?.invalid && registerForm.get('name')?.touched}"
+                                autocomplete="name" autofocus>
+                            @if (registerForm.get('name')?.errors?.['required'] && registerForm.get('name')?.touched) {
+                            <div class="invalid-feedback">
+                                Nazwa użytkownika jest wymagana
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Adres Email</label>
+                            <input id="email" type="email" class="form-control" formControlName="email"
+                                [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+                                autocomplete="email">
+                            @if (registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.touched)
+                            {
+                            <div class="invalid-feedback">
+                                Email jest wymagany
+                            </div>
+                            }
+                            @if (registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched) {
+                            <div class="invalid-feedback">
+                                Nieprawidłowy format email
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Hasło</label>
+                            <input id="password" type="password" class="form-control" formControlName="password"
+                                [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+                                autocomplete="new-password">
+                            @if (registerForm.get('password')?.errors?.['required'] &&
+                            registerForm.get('password')?.touched) {
+                            <div class="invalid-feedback">
+                                Hasło jest wymagane
+                            </div>
+                            }
+                            @if (registerForm.get('password')?.errors?.['minlength'] &&
+                            registerForm.get('password')?.touched) {
+                            <div class="invalid-feedback">
+                                Hasło musi mieć minimum 8 znaków
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <label for="password-confirm" class="form-label">Potwierdź hasło</label>
+                            <input id="password-confirm" type="password" class="form-control"
+                                formControlName="password_confirmation"
+                                [ngClass]="{'is-invalid': registerForm.errors?.['mismatch'] && registerForm.get('password_confirmation')?.touched}"
+                                autocomplete="new-password">
+                            @if (registerForm.errors?.['mismatch'] &&
+                            registerForm.get('password_confirmation')?.touched) {
+                            <div class="invalid-feedback">
+                                Hasła nie są takie same
+                            </div>
+                            }
+                        </div>
+                        <div class="mb-0">
+                            <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">
+                                Zarejestruj
+                            </button>
+                        </div>
+                    </form>
+                    @if (errorMessage) {
+                    <div class="alert alert-danger mt-3">
+                        {{ errorMessage }}
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

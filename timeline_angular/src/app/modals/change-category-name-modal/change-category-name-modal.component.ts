@@ -33,7 +33,6 @@ export class ChangeCategoryNameModalComponent implements OnInit, AfterViewInit {
     this.categoryId = categoryId;
     if (this.changeNameForm) {
       this.changeNameForm.patchValue({ category_id: categoryId });
-      console.log('Patched Category ID:', this.changeNameForm.get('category_id')?.value);
     }
   }
 

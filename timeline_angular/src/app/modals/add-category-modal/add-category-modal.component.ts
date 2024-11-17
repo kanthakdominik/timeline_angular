@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DataService } from '../../services/data.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-add-category-modal',
@@ -13,7 +15,11 @@ import { CommonModule } from '@angular/common';
 export class AddCategoryModalComponent implements OnInit {
   addCategoryForm!: FormGroup;
 
-  constructor(public modal: NgbActiveModal, private fb: FormBuilder) {}
+  constructor(
+    public modal: NgbActiveModal, 
+    private fb: FormBuilder,
+    private dataService: DataService
+  ) {}
 
   ngOnInit(): void {
     this.addCategoryForm = this.fb.group({
@@ -24,7 +30,18 @@ export class AddCategoryModalComponent implements OnInit {
 
   onSubmit(): void {
     if (this.addCategoryForm.valid) {
-      this.modal.close(this.addCategoryForm.value);
+      const newCategory: Category = {
+        id: this.dataService.getNextCategoryId(),
+        name: this.addCategoryForm.value.name,
+        color: this.addCategoryForm.value.color
+      };
+
+      this.dataService.addCategory(newCategory);
+      this.modal.close();
     }
+  }
+
+  onClose(): void {
+    this.modal.dismiss();
   }
 }

@@ -23,7 +23,7 @@
                     </div>
                     <span class="click-me no-print" id="toggleLabel">{{ event.isExpanded ? 'Zwiń' : 'Rozwiń' }}</span>
                 </div>
-                @if (isLoggedIn) {
+                @if (isLoggedIn$ | async) {
                 <div class="d-flex justify-content-end" id="events-cards-buttons">
                     <button class="btn btn-outline-primary mt-3 no-print" type="button" (click)="openEditModal(event.id)">Edytuj</button>
                     <button class="btn btn-outline-danger mt-3 no-print ms-3" type="button" (click)="removeEvent(event.id)">Usuń</button>

@@ -22,9 +22,9 @@ export class AddEventModalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public activeModal: NgbActiveModal,
+    public modal: NgbActiveModal,
     private dataService: DataService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.dataService.getCategories().subscribe(categories => {
@@ -42,7 +42,7 @@ export class AddEventModalComponent implements OnInit {
         end_date: ['', Validators.required],
         category_id: ['', Validators.required],
         image: ['']
-      }, { 
+      }, {
         validators: [
           TimelineValidators.dateOrder,
           TimelineValidators.dateOverlap(events)
@@ -95,23 +95,19 @@ export class AddEventModalComponent implements OnInit {
       return;
     }
 
-    try {
-      const newEvent: TimelineEvent = {
-        ...this.addEventForm.value,
-        id: this.dataService.getNextEventId(),
-        description: this.addEventForm.value.description || '',
-        image: this.newImageBase64 || '',
-        category_id: Number(this.addEventForm.value.category_id)
-      };
+    const newEvent: TimelineEvent = {
+      ...this.addEventForm.value,
+      id: this.dataService.getNextEventId(),
+      description: this.addEventForm.value.description || '',
+      image: this.newImageBase64 || '',
+      category_id: Number(this.addEventForm.value.category_id)
+    };
 
-      this.dataService.addEvent(newEvent);
-      this.activeModal.close(newEvent);
-    } catch (error) {
-      console.error('Error adding event:', error);
-    }
+    this.dataService.addEvent(newEvent);
+    this.modal.close(newEvent);
   }
 
   onClose(): void {
-    this.activeModal.dismiss();
+    this.modal.dismiss();
   }
 }

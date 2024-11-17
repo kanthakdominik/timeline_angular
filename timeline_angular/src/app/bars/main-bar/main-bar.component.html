@@ -7,26 +7,25 @@
     </button>
     <div class="collapse navbar-collapse no-print" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        @if(isLoggedIn) {
-        <li class="nav-item">
-          <span class="navbar-text me-5 text-white">
-            Witaj, {{ userName }}
-          </span>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/password-change">Zmień hasło</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="#" (click)="logout()">Wyloguj</a>
-        </li>
-        }
-        @else {
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/login">Zaloguj</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" routerLink="/register">Rejestracja</a>
-        </li>
+        @if (isLoggedIn$ | async) {
+          <li class="nav-item">
+            <span class="navbar-text me-5 text-white">
+              Witaj, {{ (currentUser$ | async)?.name }}
+            </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/change-password">Zmień hasło</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#" (click)="logout()">Wyloguj</a>
+          </li>
+        } @else {
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/login">Zaloguj</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" routerLink="/register">Rejestracja</a>
+          </li>
         }
       </ul>
     </div>

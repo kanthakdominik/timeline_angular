@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Event } from '../models/event.model';
 import { Category } from '../models/category.model';
+import { User } from '../models/user.model';
+import { SHA256 } from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +14,13 @@ export class DataService {
   private activeCategoryFilterSubject = new BehaviorSubject<number | null>(null);
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   private cardsExpandedStateSubject = new BehaviorSubject<boolean>(false);
+  private usersSubject = new BehaviorSubject<User[]>(this.loadUsersFromSessionStorage());
 
   activeCategoryFilter$ = this.activeCategoryFilterSubject.asObservable();
   categories$ = this.categoriesSubject.asObservable();
   events$ = this.eventsSubject.asObservable();
   cardsExpandedState$ = this.cardsExpandedStateSubject.asObservable();
+  users$ = this.usersSubject.asObservable();
 
   constructor() {
     this.initialize();
@@ -75,6 +79,32 @@ export class DataService {
     return processedEvents;
   }
 
+  private loadUsersFromSessionStorage(): User[] {
+    const usersJson = sessionStorage.getItem('users');
+    if (usersJson) return JSON.parse(usersJson);
+    const initialUsers: User[] = [
+      {
+        id: 1,
+        name: 'Administrator',
+        email: 'admin@timeline.com',
+        password: SHA256('Password123!').toString(),
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        id: 2,
+        name: 'Admin2',
+        email: 'admin2@timeline.com',
+        password: SHA256('Password123!').toString(),
+        created_at: new Date(),
+        updated_at: new Date()
+      }
+    ];
+
+    sessionStorage.setItem('users', JSON.stringify(initialUsers));
+    return initialUsers;
+  }
+
   private saveEventsToSessionStorage(events: Event[]): void {
     sessionStorage.setItem('events', JSON.stringify(events));
   }
@@ -83,12 +113,21 @@ export class DataService {
     sessionStorage.setItem('categories', JSON.stringify(categories));
   }
 
+  private saveUsersToSessionStorage(users: User[]): void {
+    sessionStorage.setItem('users', JSON.stringify(users));
+  }
+
   setActiveCategoryFilter(categoryId: number | null): void {
     this.activeCategoryFilterSubject.next(categoryId);
   }
 
   setCardsExpandedState(expanded: boolean): void {
     this.cardsExpandedStateSubject.next(expanded);
+  }
+
+  verifyPassword(plainPassword: string, hashedPassword: string): boolean {
+    const hashedInput = SHA256(plainPassword).toString();
+    return hashedInput === hashedPassword;
   }
 
   async getImageAsBase64(imageUrl: string): Promise<string> {
@@ -189,5 +228,52 @@ export class DataService {
 
   isCategoryInUse(id: number): boolean {
     return this.eventsSubject.value.some(event => event.category_id === id);
+  }
+
+  getNextCategoryId(): number {
+    return Math.max(...this.categoriesSubject.value.map(c => c.id), 0) + 1;
+  }
+
+  // User methods
+  getUsers(): Observable<User[]> {
+    return this.users$;
+  }
+
+  getUserById(id: number): User | undefined {
+    return this.usersSubject.value.find(user => user.id === id);
+  }
+
+  getUserByEmail(email: string): User | undefined {
+    return this.usersSubject.value.find(user => user.email === email);
+  }
+
+  addUser(user: User): void {
+    const hashedUser = {
+      ...user,
+      password: SHA256(user.password).toString()
+    };
+    const users = [...this.usersSubject.value, hashedUser];
+    this.usersSubject.next(users);
+    this.saveUsersToSessionStorage(users);
+  }
+
+  updatePassword(userId: number, newPassword: string): void {
+    const users = this.usersSubject.value.map(user => {
+      if (user.id === userId) {
+        return {
+          ...user,
+          password: SHA256(newPassword).toString(),
+          updated_at: new Date()
+        };
+      }
+      return user;
+    });
+
+    this.usersSubject.next(users);
+    this.saveUsersToSessionStorage(users);
+  }
+
+  getNextUserId(): number {
+    return Math.max(...this.usersSubject.value.map(u => u.id), 0) + 1;
   }
 }
