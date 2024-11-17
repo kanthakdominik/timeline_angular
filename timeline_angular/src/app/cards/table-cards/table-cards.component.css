@@ -1,0 +1,22 @@
+.table-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .category-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.9em;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+
+  .table {
+    border-color: #dee2e6;
+  }
+  

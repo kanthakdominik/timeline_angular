@@ -153,13 +153,13 @@ export class DataService {
     });
   }
 
-  getCombinedEventData(): Observable<(Event & { categoryColor?: string, isExpanded: boolean })[]> {
+  getCombinedEventData(): Observable<(Event & { categoryColor?: string, categoryName?: string, isExpanded: boolean })[]> {
     return combineLatest([this.events$, this.categories$]).pipe(
       map(([events, categories]) => {
         const sortedEvents = this.sortEventsByStartDate(events);
         return sortedEvents.map(event => {
           const category = categories.find(cat => cat.id === event.category_id);
-          return { ...event, categoryColor: category?.color, isExpanded: false };
+          return { ...event, categoryColor: category?.color, categoryName: category?.name, isExpanded: false };
         });
       })
     );
