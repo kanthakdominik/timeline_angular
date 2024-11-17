@@ -1,6 +1,13 @@
 <section class="main-container">
   <app-main-bar></app-main-bar>
+  <app-view-mode-bar></app-view-mode-bar>
   <app-settings-bar></app-settings-bar>
-  <app-categories-bar></app-categories-bar>
-  <app-events-cards></app-events-cards>
+  
+  @if ((viewMode$ | async) === 'timeline') {
+    <app-categories-bar></app-categories-bar>
+    <app-events-cards></app-events-cards>
+  } @else {
+    <app-filter-bar></app-filter-bar>
+    <app-table-cards></app-table-cards>
+  }
 </section>

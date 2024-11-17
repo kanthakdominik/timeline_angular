@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Event } from '../models/event.model';
-import { DataService } from '../services/data.service';
-import { AuthService } from '../services/auth.service';
-import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-modal.component';
+import { Event } from '../../models/event.model';
+import { DataService } from '../../services/data.service';
+import { AuthService } from '../../services/auth.service';
+import { EditEventModalComponent } from '../../modals/edit-event-modal/edit-event-modal.component';
 import { Observable } from 'rxjs';
 
 @Component({

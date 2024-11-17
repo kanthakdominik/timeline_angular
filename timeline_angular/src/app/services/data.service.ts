@@ -6,6 +6,8 @@ import { Category } from '../models/category.model';
 import { User } from '../models/user.model';
 import { SHA256 } from 'crypto-js';
 
+export type ViewMode = 'timeline' | 'table';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,12 +17,14 @@ export class DataService {
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   private cardsExpandedStateSubject = new BehaviorSubject<boolean>(false);
   private usersSubject = new BehaviorSubject<User[]>(this.loadUsersFromSessionStorage());
+  private viewModeSubject = new BehaviorSubject<ViewMode>('timeline');
 
   activeCategoryFilter$ = this.activeCategoryFilterSubject.asObservable();
   categories$ = this.categoriesSubject.asObservable();
   events$ = this.eventsSubject.asObservable();
   cardsExpandedState$ = this.cardsExpandedStateSubject.asObservable();
   users$ = this.usersSubject.asObservable();
+  viewMode$ = this.viewModeSubject.asObservable();
 
   constructor() {
     this.initialize();
@@ -123,6 +127,14 @@ export class DataService {
 
   setCardsExpandedState(expanded: boolean): void {
     this.cardsExpandedStateSubject.next(expanded);
+  }
+
+  setViewMode(mode: ViewMode): void {
+    this.viewModeSubject.next(mode);
+  }
+
+  getViewMode(): 'timeline' | 'table' {
+    return this.viewModeSubject.value;
   }
 
   verifyPassword(plainPassword: string, hashedPassword: string): boolean {

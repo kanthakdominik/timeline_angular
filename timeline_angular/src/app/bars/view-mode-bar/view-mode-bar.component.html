@@ -1,0 +1,13 @@
+<nav class="navbar navbar-expand-lg bar-properties no-print" id="settings-bar">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-center align-items-center w-100">
+      <div class="slider-container">
+        <div class="slider-track" [class.slide-right]="(viewMode$ | async) === 'table'" (click)="toggleViewMode()">
+          <span class="slider-text">Linia czasu</span>
+          <span class="slider-text">Tabela</span>
+          <div class="slider-thumb"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
