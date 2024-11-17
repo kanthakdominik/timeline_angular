@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeCategoryColorModalComponent } from '../../modals/change-category-color-modal/change-category-color-modal.component';
@@ -13,17 +13,16 @@ import { Category } from '../../models/category.model';
   templateUrl: './categories-bar.component.html',
   styleUrl: './categories-bar.component.css'
 })
-export class CategoriesBarComponent implements OnInit {
+export class CategoriesBarComponent implements OnInit, AfterViewChecked {
   categories: Category[] = [];
-  areAllCardsToggled: boolean = false;
-  activeCategoryId: number | null = null;
+  areAllCardsExpanded: boolean = false;
+  activeCategoryId: number | null = null;  
+  private shouldPrint = false;
   isLoggedIn: boolean = true; // Replace with actual authentication logic
 
   constructor(
     private modalService: NgbModal,
-    private dataService: DataService,
-    private renderer: Renderer2
-
+    private dataService: DataService
   ) { }
 
   ngOnInit(): void {
@@ -33,27 +32,21 @@ export class CategoriesBarComponent implements OnInit {
   }
 
   toggleCards() {
-    // this.areAllCardsToggled = !this.areAllCardsToggled;
-    //TODO
+    this.areAllCardsExpanded = !this.areAllCardsExpanded;
+    this.dataService.setCardsExpandedState(this.areAllCardsExpanded);
   }
 
   printView() {
-    // const eventCards = document.querySelectorAll('.event-item');
-    // eventCards.forEach(card => {
-    //   const elementsToToggle = card.querySelectorAll('.element-hidden');
-    //   elementsToToggle.forEach(element => {
-    //     this.renderer.setStyle(element, 'display', 'block');
-    //   });
-    // });
+    this.dataService.setCardsExpandedState(true);
+    this.shouldPrint = true;
+  }
 
-    // window.print();
-
-    // eventCards.forEach(card => {
-    //   const elementsToToggle = card.querySelectorAll('.element-hidden');
-    //   elementsToToggle.forEach(element => {
-    //     this.renderer.setStyle(element, 'display', 'none');
-    //   });
-    // });
+  ngAfterViewChecked() {
+    if (this.shouldPrint) {
+      this.shouldPrint = false;
+      window.print();
+      this.dataService.setCardsExpandedState(false);
+    }
   }
 
   deleteCategory(categoryId: number) {

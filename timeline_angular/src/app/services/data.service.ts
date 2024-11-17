@@ -11,11 +11,12 @@ export class DataService {
   private categoriesSubject = new BehaviorSubject<Category[]>(this.loadCategoriesFromSessionStorage());
   private activeCategoryFilterSubject = new BehaviorSubject<number | null>(null);
   private eventsSubject = new BehaviorSubject<Event[]>([]);
-
+  private cardsExpandedStateSubject = new BehaviorSubject<boolean>(false);
 
   activeCategoryFilter$ = this.activeCategoryFilterSubject.asObservable();
   categories$ = this.categoriesSubject.asObservable();
   events$ = this.eventsSubject.asObservable();
+  cardsExpandedState$ = this.cardsExpandedStateSubject.asObservable();
 
   constructor() {
     this.initialize();
@@ -86,6 +87,10 @@ export class DataService {
     this.activeCategoryFilterSubject.next(categoryId);
   }
 
+  setCardsExpandedState(expanded: boolean): void {
+    this.cardsExpandedStateSubject.next(expanded);
+  }
+
   async getImageAsBase64(imageUrl: string): Promise<string> {
     const response = await fetch(imageUrl);
     const blob = await response.blob();
@@ -97,13 +102,13 @@ export class DataService {
     });
   }
 
-  getCombinedEventData(): Observable<(Event & { categoryColor?: string, isToggled: boolean })[]> {
+  getCombinedEventData(): Observable<(Event & { categoryColor?: string, isExpanded: boolean })[]> {
     return combineLatest([this.events$, this.categories$]).pipe(
       map(([events, categories]) => {
         const sortedEvents = this.sortEventsByStartDate(events);
         return sortedEvents.map(event => {
           const category = categories.find(cat => cat.id === event.category_id);
-          return { ...event, categoryColor: category?.color, isToggled: false };
+          return { ...event, categoryColor: category?.color, isExpanded: false };
         });
       })
     );

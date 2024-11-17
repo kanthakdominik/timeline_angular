@@ -13,7 +13,7 @@ import { EditEventModalComponent } from '../modals/edit-event-modal/edit-event-m
   styleUrl: './events-cards.component.css'
 })
 export class EventsCardsComponent implements OnInit {
-  events: (Event & { categoryColor?: string, isToggled: boolean })[] = [];
+  events: (Event & { categoryColor?: string, isExpanded: boolean })[] = [];
   activeCategoryId: number | null = null;
   isLoggedIn: boolean = true;
 
@@ -42,10 +42,16 @@ export class EventsCardsComponent implements OnInit {
         }
       });
     });
+
+    this.dataService.cardsExpandedState$.subscribe(expanded => {
+      this.events.forEach(event => {
+        event.isExpanded = expanded;
+      });
+    });
   }
 
-  toggleCard(event: Event & { categoryColor?: string, isToggled: boolean }): void {
-    event.isToggled = !event.isToggled;
+  toggleCard(event: Event & { categoryColor?: string, isExpanded: boolean }): void {
+    event.isExpanded = !event.isExpanded;
   }
 
   removeEvent(eventId: number): void {
