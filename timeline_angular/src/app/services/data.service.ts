@@ -7,6 +7,14 @@ import { User } from '../models/user.model';
 import { SHA256 } from 'crypto-js';
 
 export type ViewMode = 'timeline' | 'table';
+export interface SortConfig {
+  field: 'name' | 'start_date' | 'end_date' | 'category';
+  direction: 'asc' | 'desc';
+}
+interface DateFilter {
+  startDate: Date | null;
+  endDate: Date | null;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +26,8 @@ export class DataService {
   private cardsExpandedStateSubject = new BehaviorSubject<boolean>(false);
   private usersSubject = new BehaviorSubject<User[]>(this.loadUsersFromSessionStorage());
   private viewModeSubject = new BehaviorSubject<ViewMode>('timeline');
+  private sortConfigSubject = new BehaviorSubject<SortConfig>({ field: 'name', direction: 'asc' });
+  private dateFilterSubject = new BehaviorSubject<DateFilter>({ startDate: null, endDate: null });
 
   activeCategoryFilter$ = this.activeCategoryFilterSubject.asObservable();
   categories$ = this.categoriesSubject.asObservable();
@@ -25,6 +35,8 @@ export class DataService {
   cardsExpandedState$ = this.cardsExpandedStateSubject.asObservable();
   users$ = this.usersSubject.asObservable();
   viewMode$ = this.viewModeSubject.asObservable();
+  sortConfig$ = this.sortConfigSubject.asObservable();
+  dateFilter$ = this.dateFilterSubject.asObservable();
 
   constructor() {
     this.initialize();
@@ -127,6 +139,14 @@ export class DataService {
 
   setCardsExpandedState(expanded: boolean): void {
     this.cardsExpandedStateSubject.next(expanded);
+  }
+
+  setSortConfig(config: SortConfig): void {
+    this.sortConfigSubject.next(config);
+  }
+
+  setDateFilter(filter: DateFilter): void {
+    this.dateFilterSubject.next(filter);
   }
 
   setViewMode(mode: ViewMode): void {

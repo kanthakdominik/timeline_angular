@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataService } from '../../services/data.service';
+import { DataService, SortConfig } from '../../services/data.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
 import { EditEventModalComponent } from '../../modals/edit-event-modal/edit-event-modal.component';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Event } from '../../models/event.model';
 
 @Component({
@@ -27,24 +27,33 @@ export class TableCardsComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
-
-    this.dataService.getCombinedEventData().subscribe(events => {
-      if (this.activeCategoryId === null) {
-        this.events = events;
-      } else {
-        this.events = events.filter(event => event.category_id === this.activeCategoryId);
+  
+    combineLatest([
+      this.dataService.sortConfig$,
+      this.dataService.dateFilter$,
+      this.dataService.getCombinedEventData()
+    ]).subscribe(([sortConfig, dateFilter, events]) => {
+      let filteredEvents = events;
+  
+      // Filter by category if active
+      if (this.activeCategoryId !== null) {
+        filteredEvents = filteredEvents.filter(event => event.category_id === this.activeCategoryId);
       }
-    });
-
-    this.dataService.activeCategoryFilter$.subscribe(categoryId => {
-      this.activeCategoryId = categoryId;
-      this.dataService.getCombinedEventData().subscribe(events => {
-        if (categoryId === null) {
-          this.events = events;
-        } else {
-          this.events = events.filter(event => event.category_id === categoryId);
-        }
-      });
+  
+      // Filter by dates
+      if (dateFilter.startDate) {
+        filteredEvents = filteredEvents.filter(event => 
+          new Date(event.start_date) >= dateFilter.startDate!
+        );
+      }
+      if (dateFilter.endDate) {
+        filteredEvents = filteredEvents.filter(event => 
+          new Date(event.end_date) <= dateFilter.endDate!
+        );
+      }
+  
+      // Sort filtered events
+      this.events = this.sortEvents(filteredEvents, sortConfig);
     });
   }
 
@@ -59,5 +68,25 @@ export class TableCardsComponent implements OnInit {
   openEditModal(eventId: number): void {
     const modalRef = this.modalService.open(EditEventModalComponent);
     modalRef.componentInstance.eventId = eventId;
+  }
+
+  private sortEvents(events: (Event & { categoryColor?: string, categoryName?: string })[], 
+                    sortConfig: SortConfig): (Event & { categoryColor?: string, categoryName?: string })[] {
+    return [...events].sort((a, b) => {
+      const direction = sortConfig.direction === 'asc' ? 1 : -1;
+      
+      switch (sortConfig.field) {
+        case 'name':
+          return direction * (a.name?.localeCompare(b.name || '') || 0);
+        case 'start_date':
+          return direction * (new Date(a.start_date).getTime() - new Date(b.start_date).getTime());
+        case 'end_date':
+          return direction * (new Date(a.end_date).getTime() - new Date(b.end_date).getTime());
+        case 'category':
+          return direction * ((a.categoryName || '').localeCompare(b.categoryName || '') || 0);
+        default:
+          return 0;
+      }
+    });
   }
 }

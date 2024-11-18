@@ -1,5 +1,67 @@
-<nav class="navbar navbar-expand-lg bar-properties no-print" id="settings-bar">
+<nav class="bar-properties no-print" id="settings-bar">
   <div class="container-fluid">
-    <button>siema filter</button>
+    <div class="d-flex justify-content-center align-items-center">
+    
+      <div class="d-flex gap-3 me-5">
+        <button class="btn btn-outline-dark" (click)="sortBy('name')">
+          <i [class]="'bi ' + getSortIcon('name')" class="me-2"></i>
+          Nazwa
+        </button>
+        <button class="btn btn-outline-dark" (click)="sortBy('start_date')">
+          <i [class]="'bi ' + getSortIcon('start_date')" class="me-2"></i>
+          Data rozpoczęcia
+        </button>
+        <button class="btn btn-outline-dark" (click)="sortBy('end_date')">
+          <i [class]="'bi ' + getSortIcon('end_date')" class="me-2"></i>
+          Data zakończenia
+        </button>
+        <button class="btn btn-outline-dark" (click)="sortBy('category')">
+          <i [class]="'bi ' + getSortIcon('category')" class="me-2"></i>
+          Kategoria
+        </button>
+      </div>
+
+      <div class="d-flex gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <label class="text-dark">Od:</label>
+          <div class="d-flex gap-2">
+            <input 
+              type="date" 
+              class="form-control form-control-sm date-input" 
+              [class.active-filter]="filterStartDate"
+              [(ngModel)]="filterStartDate"
+              (change)="onDateFilterChange()"
+            >
+            <button 
+              class="btn btn-outline-dark btn-sm" 
+              (click)="resetStartDate()"
+              [disabled]="!filterStartDate"
+            >
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <label class="text-dark">Do:</label>
+          <div class="d-flex gap-2">
+            <input 
+              type="date" 
+              class="form-control form-control-sm date-input" 
+              [class.active-filter]="filterEndDate"
+              [(ngModel)]="filterEndDate"
+              (change)="onDateFilterChange()"
+            >
+            <button 
+              class="btn btn-outline-dark btn-sm" 
+              (click)="resetEndDate()"
+              [disabled]="!filterEndDate"
+            >
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>

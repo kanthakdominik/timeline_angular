@@ -21,6 +21,7 @@ export class CategoriesBarComponent implements OnInit, AfterViewChecked {
   activeCategoryId: number | null = null;  
   private shouldPrint = false;
   isLoggedIn$!: Observable<boolean>;
+  isTimelineView: boolean = true;
 
   constructor(
     private modalService: NgbModal,
@@ -34,6 +35,10 @@ export class CategoriesBarComponent implements OnInit, AfterViewChecked {
 
     this.dataService.getCategories().subscribe(categories => {
       this.categories = categories;
+    });
+
+    this.dataService.viewMode$.subscribe(mode => {
+      this.isTimelineView = mode === 'timeline';
     });
   }
 
