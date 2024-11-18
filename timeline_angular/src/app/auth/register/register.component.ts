@@ -32,13 +32,18 @@ export class RegisterComponent {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      name: ['', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]],
+      email: ['', [
+        Validators.required, 
+        Validators.email,
+        Validators.maxLength(100)]],
       password: ['', [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
-      ]],
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]+$/)]],
       password_confirmation: ['', Validators.required]
     }, {
       validators: TimelineValidators.passwordMatch

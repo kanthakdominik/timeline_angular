@@ -36,16 +36,23 @@ export class AddEventModalComponent implements OnInit {
   private initForm(): void {
     this.dataService.getEvents().subscribe(events => {
       this.addEventForm = this.fb.group({
-        name: ['', Validators.required],
-        description: [''],
+        name: ['', [
+          Validators.required,
+          Validators.maxLength(50)
+        ]],
+        description: ['', Validators.maxLength(500)],
         start_date: ['', Validators.required],
         end_date: ['', Validators.required],
-        category_id: ['', Validators.required],
+        category_id: ['', [
+          Validators.required, 
+          Validators.pattern('^[0-9]+$')
+        ]],
         image: ['']
       }, {
         validators: [
           TimelineValidators.dateOrder,
-          TimelineValidators.dateOverlap(events)
+          TimelineValidators.dateOverlap(events),
+          TimelineValidators.imageFile
         ]
       });
 

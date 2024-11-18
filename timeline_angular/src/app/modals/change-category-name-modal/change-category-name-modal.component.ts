@@ -19,7 +19,10 @@ export class ChangeCategoryNameModalComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.changeNameForm = this.fb.group({
       category_id: ['', Validators.required],
-      name: ['', Validators.required]
+      name: ['', [
+        Validators.required,
+        Validators.maxLength(20)
+      ]]
     });
   }
 

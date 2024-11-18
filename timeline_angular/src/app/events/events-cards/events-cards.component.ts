@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
 import { Event } from '../../models/event.model';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 import { EditEventModalComponent } from '../../modals/edit-event-modal/edit-event-modal.component';
-import { Observable } from 'rxjs';
+import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-events-cards',
@@ -58,12 +59,20 @@ export class EventsCardsComponent implements OnInit {
     event.isExpanded = !event.isExpanded;
   }
 
-  removeEvent(eventId: number): void {
-    const confirmation = confirm('Czy chcesz na pewno usunąć wydarzenie?');
-    if (confirmation) {
-      this.dataService.deleteEvent(eventId);
-      this.events = this.events.filter(event => event.id !== eventId);
-    }
+  async removeEvent(eventId: number): Promise<void> {
+    const modalRef = this.modalService.open(ConfirmationModalComponent);
+    modalRef.componentInstance.title = 'Usuń wydarzenie';
+    modalRef.componentInstance.message = 'Czy chcesz na pewno usunąć wydarzenie?';
+    modalRef.componentInstance.confirmButtonText = 'Usuń';
+    modalRef.componentInstance.cancelButtonText = 'Anuluj';
+
+    try {
+      const result = await modalRef.result;
+      if (result === 'confirm') {
+        this.dataService.deleteEvent(eventId);
+        this.events = this.events.filter(event => event.id !== eventId);
+      }
+    } catch {}
   }
 
   openEditModal(eventId: number): void {

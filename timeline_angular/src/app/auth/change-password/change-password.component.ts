@@ -13,9 +13,9 @@ import { take } from 'rxjs/operators';
   selector: 'app-change-password',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MainBarComponent
   ],
   templateUrl: './change-password.component.html',
@@ -36,10 +36,10 @@ export class ChangePasswordComponent implements OnInit {
     this.changePasswordForm = this.fb.group({
       current_password: ['', [Validators.required]],
       new_password: ['', [
-        Validators.required, 
+        Validators.required,
         Validators.minLength(8),
         Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
-      ]],      new_password_confirmation: ['', Validators.required]
+      ]], new_password_confirmation: ['', Validators.required]
     }, {
       validators: TimelineValidators.passwordMatch
     });
@@ -47,7 +47,7 @@ export class ChangePasswordComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
-        if (!this.currentUser) {
+    if (!this.currentUser) {
       this.router.navigate(['/login']);
     }
   }
@@ -66,13 +66,13 @@ export class ChangePasswordComponent implements OnInit {
       try {
         this.dataService.updatePassword(this.currentUser.id, new_password);
         const updatedUser = this.dataService.getUserById(this.currentUser.id);
-        
+
         if (updatedUser) {
           this.authService.login(updatedUser);
         }
         this.successMessage = 'Hasło zostało zmienione pomyślnie!';
         this.changePasswordForm.reset();
-        
+
         timer(1000).pipe(take(1)).subscribe(() => {
           this.router.navigate(['/']);
         });

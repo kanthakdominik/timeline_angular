@@ -19,21 +19,6 @@ export class TimelineValidators {
     return null;
   }
 
-  static imageFile(input: HTMLInputElement): ValidationErrors | null {
-    const file = input.files?.[0];
-    if (file) {
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-      if (!validTypes.includes(file.type)) {
-        return { invalidImageType: 'Dozwolone są tylko pliki obrazów (JPG, PNG, GIF)' };
-      }
-      const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        return { invalidImageSize: 'Rozmiar pliku nie może przekraczać 5MB' };
-      }
-    }
-    return null;
-  }
-
   static dateOverlap(events: TimelineEvent[], currentEventId?: number) {
     return (formGroup: FormGroup): ValidationErrors | null => {
       const startDate = formGroup.get('start_date')?.value;
@@ -64,6 +49,21 @@ export class TimelineValidators {
       }
       return null;
     };
+  }
+
+  static imageFile(input: HTMLInputElement): ValidationErrors | null {
+    const file = input.files?.[0];
+    if (file) {
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+      if (!validTypes.includes(file.type)) {
+        return { invalidImageType: 'Dozwolone są tylko pliki obrazów (JPG, PNG, GIF)' };
+      }
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        return { invalidImageSize: 'Rozmiar pliku nie może przekraczać 5MB' };
+      }
+    }
+    return null;
   }
 
   static passwordMatch(g: FormGroup): ValidationErrors | null {

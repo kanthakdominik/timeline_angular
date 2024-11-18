@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeCategoryColorModalComponent } from '../../modals/change-category-color-modal/change-category-color-modal.component';
 import { ChangeCategoryNameModalComponent } from '../../modals/change-category-name-modal/change-category-name-modal.component';
+import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
 import { Category } from '../../models/category.model';
@@ -66,17 +67,33 @@ export class CategoriesBarComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  deleteCategory(categoryId: number) {
+  async deleteCategory(categoryId: number) {
     const categoryInUse = this.dataService.isCategoryInUse(categoryId);
+    
     if (categoryInUse) {
-      alert('Ta kategoria jest przypisana do wydarzenia i nie można jej usunąć');
-    } else {
-      if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
+      const modalRef = this.modalService.open(ConfirmationModalComponent);
+      modalRef.componentInstance.title = 'Nie można usunąć kategorii';
+      modalRef.componentInstance.message = 'Ta kategoria jest przypisana do wydarzenia i nie można jej usunąć';
+      modalRef.componentInstance.confirmButtonVisible = false;
+      modalRef.componentInstance.cancelButtonText = 'OK';
+      return;
+    }
+  
+    const modalRef = this.modalService.open(ConfirmationModalComponent);
+    modalRef.componentInstance.title = 'Potwierdź usunięcie';
+    modalRef.componentInstance.message = 'Czy na pewno chcesz usunąć tę kategorię?';
+    modalRef.componentInstance.confirmButtonText = 'Usuń';
+    modalRef.componentInstance.cancelButtonText = 'Anuluj';
+  
+    try {
+      const result = await modalRef.result;
+      if (result === 'confirm') {
         this.dataService.deleteCategory(categoryId);
         this.dataService.getCategories().subscribe(categories => {
           this.categories = categories;
-        });      }
-    }
+        });
+      }
+    } catch (err) {}
   }
 
   filterEvents(categoryId: number): void {

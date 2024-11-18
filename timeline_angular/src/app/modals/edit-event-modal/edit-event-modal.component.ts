@@ -49,16 +49,23 @@ export class EditEventModalComponent implements OnInit {
   private initForm(): void {
     this.dataService.getEvents().subscribe(events => {
       this.editEventForm = this.fb.group({
-        name: [this.event?.name || '', Validators.required],
-        description: [this.event?.description || ''],
+        name: [this.event?.name || '', [
+          Validators.required,
+          Validators.maxLength(50)
+        ]],
+        description: [this.event?.description || '', Validators.maxLength(500)],
         start_date: [this.event?.start_date || '', Validators.required],
         end_date: [this.event?.end_date || '', Validators.required],
         image: [this.event?.image || ''],
-        category_id: [this.event?.category_id || '', Validators.required]
+        category_id: [this.event?.category_id || '', [
+          Validators.required,
+          Validators.pattern('^[0-9]+$')
+        ]]
       }, { 
         validators: [
           TimelineValidators.dateOrder,
-          TimelineValidators.dateOverlap(events, this.event?.id)
+          TimelineValidators.dateOverlap(events, this.event?.id),
+          TimelineValidators.imageFile
         ]
       });
   

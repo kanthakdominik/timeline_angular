@@ -23,7 +23,10 @@ export class AddCategoryModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.addCategoryForm = this.fb.group({
-      name: ['', Validators.required],
+      name: ['', [
+        Validators.required,
+        Validators.maxLength(20)
+      ]],
       color: ['#4A628A', Validators.required]
     });
   }
