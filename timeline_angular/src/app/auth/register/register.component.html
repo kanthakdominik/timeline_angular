@@ -53,7 +53,13 @@
                             @if (registerForm.get('password')?.errors?.['minlength'] &&
                             registerForm.get('password')?.touched) {
                             <div class="invalid-feedback">
-                                Hasło musi mieć minimum 8 znaków
+                                Hasło musi zawierać:
+                                <ul class="mb-0">
+                                    <li>Przynajmniej jedną wielką literę</li>
+                                    <li>Przynajmniej jedną małą literę</li>
+                                    <li>Przynajmniej jedną cyfrę</li>
+                                    <li>Przynajmniej jeden znak specjalny (&#64;$!%*?&)</li>
+                                </ul>
                             </div>
                             }
                         </div>
