@@ -4,9 +4,9 @@ import { MainBarComponent } from '../bars/main-bar/main-bar.component';
 import { SettingsBarComponent } from '../bars/settings-bar/settings-bar.component';
 import { ViewModeBarComponent } from '../bars/view-mode-bar/view-mode-bar.component';
 import { CategoriesBarComponent } from '../bars/categories-bar/categories-bar.component';
-import { EventsCardsComponent } from '../cards/events-cards/events-cards.component';
+import { EventsCardsComponent } from '../events/events-cards/events-cards.component';
 import { FilterBarComponent } from '../bars/filter-bar/filter-bar.component';
-import { TableCardsComponent } from '../cards/table-cards/table-cards.component';
+import { EventsTableComponent } from '../events/events-table/events-table.component';
 import { DataService } from '../services/data.service';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
     CategoriesBarComponent,
     EventsCardsComponent,
     FilterBarComponent,
-    TableCardsComponent
+    EventsTableComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'

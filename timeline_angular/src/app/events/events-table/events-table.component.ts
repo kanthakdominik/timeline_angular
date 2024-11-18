@@ -8,13 +8,13 @@ import { Observable, combineLatest } from 'rxjs';
 import { Event } from '../../models/event.model';
 
 @Component({
-  selector: 'app-table-cards',
+  selector: 'app-events-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './table-cards.component.html',
-  styleUrl: './table-cards.component.css'
+  templateUrl: './events-table.component.html',
+  styleUrl: './events-table.component.css'
 })
-export class TableCardsComponent implements OnInit {
+export class EventsTableComponent implements OnInit {
   events: (Event & { categoryColor?: string, categoryName?: string })[] = [];
   activeCategoryId: number | null = null;
   isLoggedIn$!: Observable<boolean>;
@@ -31,16 +31,14 @@ export class TableCardsComponent implements OnInit {
     combineLatest([
       this.dataService.sortConfig$,
       this.dataService.dateFilter$,
-      this.dataService.getCombinedEventData()
-    ]).subscribe(([sortConfig, dateFilter, events]) => {
+      this.dataService.getCombinedEventData(),
+      this.dataService.activeCategoryFilter$
+    ]).subscribe(([sortConfig, dateFilter, events, categoryId]) => {
       let filteredEvents = events;
   
-      // Filter by category if active
-      if (this.activeCategoryId !== null) {
-        filteredEvents = filteredEvents.filter(event => event.category_id === this.activeCategoryId);
+      if (categoryId !== null) {
+        filteredEvents = filteredEvents.filter(event => event.category_id === categoryId);
       }
-  
-      // Filter by dates
       if (dateFilter.startDate) {
         filteredEvents = filteredEvents.filter(event => 
           new Date(event.start_date) >= dateFilter.startDate!
@@ -51,9 +49,7 @@ export class TableCardsComponent implements OnInit {
           new Date(event.end_date) <= dateFilter.endDate!
         );
       }
-  
-      // Sort filtered events
-      this.events = this.sortEvents(filteredEvents, sortConfig);
+        this.events = this.sortEvents(filteredEvents, sortConfig);
     });
   }
 
