@@ -18,7 +18,7 @@
 
 4. **Navigate to project directory**
    ```bash
-   cd timeline_php
+   cd timeline_angular
    ```
 
 5. **Install dependencies**
