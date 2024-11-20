@@ -5,9 +5,10 @@
 /tmp
 /out-tsc
 /bazel-out
+timeline_angular/.angular
 
 # Node
-/node_modules
+timeline_angular/node_modules
 npm-debug.log
 yarn-error.log
 
