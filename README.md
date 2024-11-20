@@ -26,9 +26,16 @@
    npm install
    ```
 
-6. **Start the server**
+6. **Start the local development server**
    ```bash
-   npm start
+   npm run dev
    ```
 
-The Timeline application will be available at at <http://localhost:8080>
+The Timeline application will be available at <http://localhost:4200>
+
+**Or alternatively production server**
+   ```bash
+   npm install
+   ```
+
+Then the application will run on simple server and will be available at<http://localhost:8080>   
