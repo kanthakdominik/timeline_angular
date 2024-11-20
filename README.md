@@ -33,9 +33,9 @@
 
 The Timeline application will be available at <http://localhost:4200>
 
-**Or alternatively production server**
+**Or alternatively run theproduction server**
    ```bash
    npm install
    ```
 
-Then the application will run on simple server and will be available at<http://localhost:8080>   
+Then the application will run on simple server and will be available at <http://localhost:8080>   
